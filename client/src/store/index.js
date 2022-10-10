@@ -7,6 +7,7 @@ export const GlobalStoreContext = createContext({});
     which makes use of things like actions and reducers. 
     
     @author McKilla Gorilla
+    @author Leipan
 */
 
 // THESE ARE ALL THE TYPES OF UPDATES TO OUR GLOBAL
@@ -116,10 +117,10 @@ export const useGlobalStore = () => {
         async function asyncChangeListName(id) {
             let response = await api.getPlaylistById(id);
             if (response.data.success) {
-                let playlist = response.data.playist;
+                let playlist = response.data.playlist;//TYPO??? was playist
                 playlist.name = newName;
                 async function updateList(playlist) {
-                    response = await api.updatePlaylistById(playlist._id, playlist);
+                    response = await api.updatePlaylistById(playlist._id, playlist);//CREATE API FOR THIS
                     if (response.data.success) {
                         async function getListPairs(playlist) {
                             response = await api.getPlaylistPairs();
@@ -194,6 +195,39 @@ export const useGlobalStore = () => {
     }
     store.redo = function () {
         tps.doTransaction();
+    }
+    //~~CREATE NEW LIST FUNCTION
+    // store.createNewList= function(){
+        
+    //     async function asyncCreateNewList(){
+    //         console.log("create new list")
+    //         const response=await api.createNewPlaylist();
+    //         // console.log(response);
+    //     }
+    //     asyncCreateNewList();
+    // }
+    store.createNewList = function() {
+        async function asyncCreateNewList(){
+            let response= await api.createNewPlaylist();
+            if(response.data.success){
+                let playlistID=response.data.playlist._id
+                async function asyncSetCurrentList(id){
+                    let response=await api.getPlaylistById(id);
+                    if(response.data.success){
+                        let playlist= response.data.playlist;
+                        if(response.data.success){
+                            storeReducer({
+                                type:GlobalStoreActionType.CREATE_NEW_LIST,
+                                payload:playlist
+                            });
+                            store.history.push("/playlist/" + playlist._id);
+                        }
+                    }
+                }asyncSetCurrentList(playlistID)
+                
+            }
+        }
+        asyncCreateNewList();
     }
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
