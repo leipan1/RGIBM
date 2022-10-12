@@ -9,11 +9,13 @@ import { GlobalStoreContext } from '../store'
     @author McKilla Gorilla
 */
 function ListCard(props) {
+
     const { store } = useContext(GlobalStoreContext);
     const [ editActive, setEditActive ] = useState(false);
     const [ text, setText ] = useState("");
     store.history = useHistory();
     const { idNamePair, selected } = props;
+    // const { idNamePair, selected, deleteListCallback } = props;
 
     function handleLoadList(event) {
         if (!event.target.disabled) {
@@ -54,8 +56,11 @@ function ListCard(props) {
     }
 
     function handleDeletePlaylist(event){
-        //let id=event.target.id.substring("delete-list-".length);
-        store.deleteList(props.idNamePair._id);
+        event.stopPropagation();
+        //props.deleteListCallback(props.idNamePair._id)
+        store.markListForDeletion(idNamePair)
+        store.showDeleteListModal();
+        //store.deleteList(props.idNamePair._id);
     }
 
     let selectClass = "unselected-list-card";

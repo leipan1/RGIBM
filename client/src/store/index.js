@@ -1,6 +1,9 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
+
+import DeleteListModal from '../components/DeleteListModal.js';
+
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -19,6 +22,7 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -28,12 +32,22 @@ const tps = new jsTPS();
 // AVAILABLE TO THE REST OF THE APPLICATION
 export const useGlobalStore = () => {
     // THESE ARE ALL THE THINGS OUR DATA STORE WILL MANAGE
+    // const CurrentModal={
+    //     NONE : "NONE",
+    //     DELETE_LIST : "DELETE_LIST",
+    //     EDIT_SONG : "EDIT_SONG",
+    //     REMOVE_SONG : "REMOVE_SONG"
+    // }
+
     const [store, setStore] = useState({
         idNamePairs: [],
         currentList: null,
         newListCounter: 0,
-        listNameActive: false
+        listNameActive: false,
+        // currentModal: CurrentModal.NONE,
+        markForDeletion: null,
     });
+
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
     // HANDLE EVERY TYPE OF STATE CHANGE
@@ -46,7 +60,8 @@ export const useGlobalStore = () => {
                     idNamePairs: payload.idNamePairs,
                     currentList: payload.playlist,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    markForDeletion: store.markForDeletion,
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -55,7 +70,8 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: null,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    markForDeletion: store.markForDeletion,
                 })
             }
             // CREATE A NEW LIST
@@ -64,7 +80,8 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter + 1,
-                    listNameActive: false
+                    listNameActive: false,
+                    markForDeletion: store.markForDeletion,
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -73,7 +90,8 @@ export const useGlobalStore = () => {
                     idNamePairs: payload,
                     currentList: null,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    markForDeletion: store.markForDeletion,
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -82,7 +100,8 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: null,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    markForDeletion: payload,
                 });
             }
             // UPDATE A LIST
@@ -91,7 +110,8 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    markForDeletion: store.markForDeletion,
                 });
             }
             // START EDITING A LIST NAME
@@ -100,7 +120,8 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter,
-                    listNameActive: true
+                    listNameActive: true,
+                    markForDeletion: store.markForDeletion,
                 });
             }
             default:
@@ -224,27 +245,47 @@ export const useGlobalStore = () => {
     }
 
     //~~DELETE LIST FUNCTION
-    store.deleteList=function(id){
-        console.log("delete list func:"+id)
-        async function asyncMarkDeleteList(id){
-            let response=await api.getPlaylistById(id);
+    store.deleteList=function(){
+        let playlist=store.markForDeletion
+        //console.log("delete list func:")
+        // let modal=document.getElementById("delete-list-modal")
+        // console.log("modal:"+modal)
+        // modal.classList.add("is-visible");
+        // async function asyncMarkDeleteList(id){
+        //     let response=await api.getPlaylistById(id);
+        //     let playlist=response.data.playlist
+        //     if(response.data.success){
+        //         storeReducer({
+        //             type:GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+        //             payload:{
+        //                 playlist
+        //             }
+        //         });
+        //     }
+        async function asyncDeletePlaylist(playlist){
+            let response = await api.deletePlaylist(playlist._id)
             if(response.data.success){
-                storeReducer({
-                    type:GlobalStoreActionType.MARK_LIST_FOR_DELETION,
-                    payload:{}
-                });
+                async function reloadList(){
+                    store.history.push("/");
+                    store.loadIdNamePairs();
+                }reloadList()
+                // const newPlaylists=store.idNamePairs.filter(idNamePair=>idNamePair!==playlist)
+                // storeReducer({
+                //     type:GlobalStoreActionType.DELETE_LIST,
+                //     payload:newPlaylists
+                // })
             }
-            async function asyncDeletePlaylist(id){
-                let response = await api.deletePlaylist(id)
-                if(response.data.success){
-                    async function reloadList(){
-                        store.history.push("/");
-                        store.loadIdNamePairs();
-                    }reloadList()
-                }
-            }asyncDeletePlaylist(id)
-        }asyncMarkDeleteList(id)
+        }asyncDeletePlaylist(playlist)
+        // }asyncMarkDeleteList(id)
 
+    }
+
+    store.markListForDeletion= function (idNamePair){
+        console.log("id name pair::"+idNamePair.name)
+       storeReducer({
+        type:GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+        payload:idNamePair
+       })
     }
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
@@ -253,6 +294,16 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
             payload: null
         });
+    }
+
+    store.showDeleteListModal= function () {
+        let modal=document.getElementById("delete-list-modal");
+        modal.classList.add("is-visible");
+    }
+
+    store.hideDeleteListModal= function(){
+        let modal=document.getElementById("delete-list-modal");
+        modal.classList.remove("is-visible");
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
