@@ -220,10 +220,14 @@ input {
   border-bottom: dotted;
 }
 
+.modal-center{
+  font-size: x-large;
+}
+
 
 .modal-header,
 .modal-close {
-  font-size: 1.5rem;
+  font-size: 2rem;
 }
 
 .modal p + p {
@@ -232,7 +236,12 @@ input {
 
 .modal-control {
   cursor: pointer;
-  width: 20%;
+  /* width: 20%; */
+}
+
+.modal-button{
+  margin-left: 5%;
+  margin-right: 5%;
 }
 
 .dialog-header {
