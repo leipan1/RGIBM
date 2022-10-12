@@ -158,6 +158,8 @@ export const useGlobalStore = () => {
             const response = await api.getPlaylistPairs();
             if (response.data.success) {
                 let pairsArray = response.data.idNamePairs;
+                console.log("pairs array:")
+                console.log(pairsArray)
                 storeReducer({
                     type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                     payload: pairsArray
@@ -196,19 +198,11 @@ export const useGlobalStore = () => {
     store.redo = function () {
         tps.doTransaction();
     }
+
     //~~CREATE NEW LIST FUNCTION
-    // store.createNewList= function(){
-        
-    //     async function asyncCreateNewList(){
-    //         console.log("create new list")
-    //         const response=await api.createNewPlaylist();
-    //         // console.log(response);
-    //     }
-    //     asyncCreateNewList();
-    // }
     store.createNewList = function() {
         async function asyncCreateNewList(){
-            let response= await api.createNewPlaylist();
+            let response= await api.createPlaylist();
             if(response.data.success){
                 let playlistID=response.data.playlist._id
                 async function asyncSetCurrentList(id){
@@ -224,10 +218,33 @@ export const useGlobalStore = () => {
                         }
                     }
                 }asyncSetCurrentList(playlistID)
-                
             }
         }
         asyncCreateNewList();
+    }
+
+    //~~DELETE LIST FUNCTION
+    store.deleteList=function(id){
+        console.log("delete list func:"+id)
+        async function asyncMarkDeleteList(id){
+            let response=await api.getPlaylistById(id);
+            if(response.data.success){
+                storeReducer({
+                    type:GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+                    payload:{}
+                });
+            }
+            async function asyncDeletePlaylist(id){
+                let response = await api.deletePlaylist(id)
+                if(response.data.success){
+                    async function reloadList(){
+                        store.history.push("/");
+                        store.loadIdNamePairs();
+                    }reloadList()
+                }
+            }asyncDeletePlaylist(id)
+        }asyncMarkDeleteList(id)
+
     }
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME

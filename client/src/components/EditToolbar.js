@@ -29,6 +29,7 @@ function EditToolbar() {
     }
     return (
         <span id="edit-toolbar">
+        
             <input
                 type="button"
                 id='add-song-button'
