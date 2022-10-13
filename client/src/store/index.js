@@ -280,10 +280,25 @@ export const useGlobalStore = () => {
         modal.classList.remove("is-visible");
     }
 
-    // store.setIsListNameEditActive= function(){
-    //     console.log("tokk")
-    // }
-
-    // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
+    store.addSong=function(){
+        let currentList=store.currentList
+        console.log(currentList) 
+        let newSong={
+            title:"Untitled",
+            artist:"Unknown",
+            youTubeId:"dQw4w9WgXcQ"
+        }
+        currentList.songs.push(newSong)
+        console.log(currentList)
+        async function reloadList(){
+            let response=await api.editPlaylist(currentList._id,currentList)
+            if(response.data.success){
+                storeReducer({
+                    type:GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload:currentList,
+                })
+            }
+        }reloadList()
+    }
     return { store, storeReducer };
 }
