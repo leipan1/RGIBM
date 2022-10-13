@@ -38,7 +38,8 @@ function ListCard(props) {
     function toggleEdit() {
         let newActive = !editActive;
         if (newActive) {
-            store.setIsListNameEditActive();
+            //store.setIsListNameEditActive();
+            store.setlistNameActive();
         }
         setEditActive(newActive);
 
@@ -57,10 +58,8 @@ function ListCard(props) {
 
     function handleDeletePlaylist(event){
         event.stopPropagation();
-        //props.deleteListCallback(props.idNamePair._id)
         store.markListForDeletion(idNamePair)
         store.showDeleteListModal();
-        //store.deleteList(props.idNamePair._id);
     }
 
     let selectClass = "unselected-list-card";

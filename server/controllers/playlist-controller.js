@@ -100,10 +100,25 @@ getPlaylistPairs = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+editPlaylist = async (req,res)=>{
+    console.log("edit playlist in server called!")
+    const body=req.body
+    console.log("body:")
+    console.log(body)
+    await Playlist.updateOne({ _id: req.params.id }, body, (err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err });
+        }
+
+        return res.status(200).json({ success: true, playlist: list });
+  }).catch((err) => console.log(err));
+}
+
 module.exports = {
     createPlaylist,
     deletePlaylist,
     getPlaylists,
     getPlaylistPairs,
-    getPlaylistById
+    getPlaylistById,
+    editPlaylist,
 }

@@ -32,19 +32,13 @@ const tps = new jsTPS();
 // AVAILABLE TO THE REST OF THE APPLICATION
 export const useGlobalStore = () => {
     // THESE ARE ALL THE THINGS OUR DATA STORE WILL MANAGE
-    // const CurrentModal={
-    //     NONE : "NONE",
-    //     DELETE_LIST : "DELETE_LIST",
-    //     EDIT_SONG : "EDIT_SONG",
-    //     REMOVE_SONG : "REMOVE_SONG"
-    // }
+
 
     const [store, setStore] = useState({
         idNamePairs: [],
         currentList: null,
         newListCounter: 0,
         listNameActive: false,
-        // currentModal: CurrentModal.NONE,
         markForDeletion: null,
     });
 
@@ -141,7 +135,7 @@ export const useGlobalStore = () => {
                 let playlist = response.data.playlist;//TYPO??? was playist
                 playlist.name = newName;
                 async function updateList(playlist) {
-                    response = await api.updatePlaylistById(playlist._id, playlist);//CREATE API FOR THIS
+                    response = await api.editPlaylist(playlist._id, playlist);//CREATE API FOR THIS
                     if (response.data.success) {
                         async function getListPairs(playlist) {
                             response = await api.getPlaylistPairs();
@@ -154,6 +148,7 @@ export const useGlobalStore = () => {
                                         playlist: playlist
                                     }
                                 });
+                                store.history.push("/")
                             }
                         }
                         getListPairs(playlist);
@@ -247,21 +242,6 @@ export const useGlobalStore = () => {
     //~~DELETE LIST FUNCTION
     store.deleteList=function(){
         let playlist=store.markForDeletion
-        //console.log("delete list func:")
-        // let modal=document.getElementById("delete-list-modal")
-        // console.log("modal:"+modal)
-        // modal.classList.add("is-visible");
-        // async function asyncMarkDeleteList(id){
-        //     let response=await api.getPlaylistById(id);
-        //     let playlist=response.data.playlist
-        //     if(response.data.success){
-        //         storeReducer({
-        //             type:GlobalStoreActionType.MARK_LIST_FOR_DELETION,
-        //             payload:{
-        //                 playlist
-        //             }
-        //         });
-        //     }
         async function asyncDeletePlaylist(playlist){
             let response = await api.deletePlaylist(playlist._id)
             if(response.data.success){
@@ -269,14 +249,8 @@ export const useGlobalStore = () => {
                     store.history.push("/");
                     store.loadIdNamePairs();
                 }reloadList()
-                // const newPlaylists=store.idNamePairs.filter(idNamePair=>idNamePair!==playlist)
-                // storeReducer({
-                //     type:GlobalStoreActionType.DELETE_LIST,
-                //     payload:newPlaylists
-                // })
             }
         }asyncDeletePlaylist(playlist)
-        // }asyncMarkDeleteList(id)
 
     }
 
@@ -305,6 +279,10 @@ export const useGlobalStore = () => {
         let modal=document.getElementById("delete-list-modal");
         modal.classList.remove("is-visible");
     }
+
+    // store.setIsListNameEditActive= function(){
+    //     console.log("tokk")
+    // }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };

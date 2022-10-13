@@ -4,7 +4,6 @@ import { GlobalStoreContext } from '../store'
 function DeleteListModal(){
     const { store } = useContext(GlobalStoreContext);
     let name=""
-    console.log("TESTING:::::::::::")
     console.log(store.markForDeletion)
     if(store.markForDeletion){
         console.log(store.markForDeletion._id)

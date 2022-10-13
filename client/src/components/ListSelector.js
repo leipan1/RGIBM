@@ -11,7 +11,6 @@ import DeleteListModal from './DeleteListModal'
 const ListSelector = () => {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
-    // const {deleteListCallback}=this.props
 
     useEffect(() => {
         store.loadIdNamePairs();
@@ -21,9 +20,6 @@ const ListSelector = () => {
         store.createNewList();
     }
 
-    // function showDeleteListModal(){
-    //     alert("SHOW DELETE LIST MODAL")
-    // }
 
     
     //add props
@@ -34,7 +30,6 @@ const ListSelector = () => {
                 key={pair._id}
                 idNamePair={pair}
                 selected={false}
-                // deleteListCallback={deleteListCallback}
             />
         ))
     }
@@ -52,18 +47,10 @@ const ListSelector = () => {
                 Your Lists
             </div>                
                 {
-                    /* <listCard
-                        deleteListCallback={this.showDeleteListModal}
-                    /> */
                     listCard
 
                 }
-                <DeleteListModal
-                    // isOpenCallback={this.isDeleteListModalOpen}
-                    // hideModalCallback={this.hideModal}
-                    // listKeyPair={this.state.listKeyPairMarkedForDeletion}
-                    // deleteListCallback={this.deleteMarkedList}
-                />
+                <DeleteListModal/>
             </div>
         </div>)
 }
