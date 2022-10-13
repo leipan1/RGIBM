@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react'
+import { createContext, startTransition, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
 
@@ -256,10 +256,10 @@ export const useGlobalStore = () => {
 
     store.markListForDeletion= function (idNamePair){
         console.log("id name pair::"+idNamePair.name)
-       storeReducer({
-        type:GlobalStoreActionType.MARK_LIST_FOR_DELETION,
-        payload:idNamePair
-       })
+        storeReducer({
+            type:GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+            payload:idNamePair
+        })
     }
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
@@ -290,7 +290,7 @@ export const useGlobalStore = () => {
         }
         currentList.songs.push(newSong)
         console.log(currentList)
-        async function reloadList(){
+        async function reloadList(currentList){
             let response=await api.editPlaylist(currentList._id,currentList)
             if(response.data.success){
                 storeReducer({
@@ -298,7 +298,38 @@ export const useGlobalStore = () => {
                     payload:currentList,
                 })
             }
-        }reloadList()
+        }reloadList(currentList)
     }
+
+    store.moveSong=function(sourceId,targetId){
+        let list=store.currentList
+        if(sourceId<targetId){
+            let temp=list.songs[sourceId]
+            for (let i = sourceId; i < targetId; i++) {
+                list.songs[i] = list.songs[i + 1];
+            }
+            list.songs[targetId] = temp;
+        }
+        else if (sourceId>targetId){
+            let temp = list.songs[sourceId];
+            for (let i = sourceId; i > targetId; i--) {
+                list.songs[i] = list.songs[i - 1];
+            }
+            list.songs[targetId] = temp;
+        }
+        async function reloadList(list){
+            console.log(list)
+            let response=await api.editPlaylist(list._id,list)
+            if(response.data.success){
+                storeReducer({
+                    type:GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload:list,
+                })
+            }
+        }reloadList(list)
+    }
+
+
+
     return { store, storeReducer };
 }
