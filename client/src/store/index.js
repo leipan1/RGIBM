@@ -4,6 +4,7 @@ import api from '../api'
 import AddSong_Transaction from '../transaction/AddSong_Transaction';
 import DeleteSong_Transaction from '../transaction/DeleteSong_Transaction';
 import EditSong_Transaction from '../transaction/EditSong_Transaction';
+import MoveSong_Transaction from '../transaction/MoveSong_Transaction';
 
 
 export const GlobalStoreContext = createContext({});
@@ -458,6 +459,11 @@ export const useGlobalStore = () => {
 
     store.addEditSongTransaction=function(index){
         let transaction=new EditSong_Transaction(store,index)
+        tps.addTransaction(transaction)
+    }
+
+    store.addMoveSongTransaction=function(oldIndex, newIndex){
+        let transaction= new MoveSong_Transaction(store,oldIndex, newIndex)
         tps.addTransaction(transaction)
     }
 

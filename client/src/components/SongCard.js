@@ -33,7 +33,8 @@ function SongCard(props) {
 
         sourceId=parseInt(sourceId)
         targetId=parseInt(targetId)
-        store.moveSong(sourceId,targetId)
+        //store.moveSong(sourceId,targetId)
+        store.addMoveSongTransaction(sourceId,targetId)
     }
     function handleDeleteSong(event){
         event.stopPropagation();
