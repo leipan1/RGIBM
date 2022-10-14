@@ -2,6 +2,7 @@ import { createContext, startTransition, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
 import AddSong_Transaction from '../transaction/AddSong_Transaction';
+import DeleteSong_Transaction from '../transaction/DeleteSong_Transaction';
 
 
 export const GlobalStoreContext = createContext({});
@@ -426,6 +427,11 @@ export const useGlobalStore = () => {
 
     store.addAddSongTransaction = function (){
         let transaction= new AddSong_Transaction(store)
+        tps.addTransaction(transaction)
+    }
+
+    store.addDeleteSongTransaction=function(index){
+        let transaction=new DeleteSong_Transaction(store,index)
         tps.addTransaction(transaction)
     }
 

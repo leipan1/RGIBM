@@ -37,8 +37,9 @@ function SongCard(props) {
     }
     function handleDeleteSong(event){
         event.stopPropagation();
-        store.markSongForDeletion(index)
-        store.showDeleteSongModal();
+        // store.markSongForDeletion(index)
+        // store.showDeleteSongModal();
+        store.addDeleteSongTransaction(index);
 
     }
     function handleEditSong(event){
