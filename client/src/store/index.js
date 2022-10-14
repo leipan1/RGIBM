@@ -268,7 +268,7 @@ export const useGlobalStore = () => {
         let newPlaylist=store.currentList.songs.filter(song=>song._id!==deleteSongId)
         store.currentList.songs=newPlaylist
         async function asyncUpdatePlaylist(currentList){
-            let response= await api.getPlaylistById(currentList._id)
+            let response= await api.editPlaylist(currentList._id,currentList)
             if(response.data.success){
                 storeReducer({
                     type:GlobalStoreActionType.SET_CURRENT_LIST,
