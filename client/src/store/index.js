@@ -183,8 +183,6 @@ export const useGlobalStore = () => {
             const response = await api.getPlaylistPairs();
             if (response.data.success) {
                 let pairsArray = response.data.idNamePairs;
-                console.log("pairs array:")
-                console.log(pairsArray)
                 storeReducer({
                     type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                     payload: pairsArray
@@ -264,9 +262,8 @@ export const useGlobalStore = () => {
     }
 
     store.deleteSong=function(){
-        let deleteSongId=store.markForDeletion._id
-        let newPlaylist=store.currentList.songs.filter(song=>song._id!==deleteSongId)
-        store.currentList.songs=newPlaylist
+        let index=store.markForDeletion
+        store.currentList.songs.splice(index,1)
         async function asyncUpdatePlaylist(currentList){
             let response= await api.editPlaylist(currentList._id,currentList)
             if(response.data.success){
@@ -289,10 +286,10 @@ export const useGlobalStore = () => {
         })
     }
 
-    store.markSongForDeletion= function (song){
+    store.markSongForDeletion= function (index){
         storeReducer({
             type:GlobalStoreActionType.MARK_SONG_FOR_DELETION,
-            payload:song
+            payload:index
         })
     }
 
@@ -326,14 +323,12 @@ export const useGlobalStore = () => {
 
     store.addSong=function(){
         let currentList=store.currentList
-        console.log(currentList) 
         let newSong={
             title:"Untitled",
             artist:"Unknown",
             youTubeId:"dQw4w9WgXcQ"
         }
         currentList.songs.push(newSong)
-        console.log(currentList)
         async function reloadList(currentList){
             let response=await api.editPlaylist(currentList._id,currentList)
             if(response.data.success){
@@ -362,7 +357,6 @@ export const useGlobalStore = () => {
             list.songs[targetId] = temp;
         }
         async function reloadList(list){
-            console.log(list)
             let response=await api.editPlaylist(list._id,list)
             if(response.data.success){
                 storeReducer({

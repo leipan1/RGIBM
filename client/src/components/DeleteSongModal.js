@@ -10,14 +10,12 @@ function DeleteListModal(){
 
     
     function handleConfirmDeleteList(){
-        console.log("confirm delete")
         store.deleteSong();
         store.hideDeleteSongModal();
     }
 
 
     function handleCancelDeleteList(){
-        console.log("cancel delete")
         store.hideDeleteSongModal();
     }
 

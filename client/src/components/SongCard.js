@@ -37,7 +37,9 @@ function SongCard(props) {
     }
     function handleDeleteSong(event){
         event.stopPropagation();
-        store.markSongForDeletion(song)
+        console.log("song to be marked for deletion:")
+        console.log(index)
+        store.markSongForDeletion(index)
         store.showDeleteSongModal();
 
     }
