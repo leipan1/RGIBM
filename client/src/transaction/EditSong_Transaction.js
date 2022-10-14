@@ -17,8 +17,7 @@ export default class EditSong_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-        this.store.markSongForEdit(this.index)
-        this.store.showEditSongModal();
+        this.store.editSong(this.newTitle,this.newArtist,this.newYTID,this.index)
     }
     
     undoTransaction() {

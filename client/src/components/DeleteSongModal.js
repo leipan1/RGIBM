@@ -12,7 +12,8 @@ function DeleteSongModal(){
 
     
     function handleConfirmDeleteList(){
-        store.deleteSong();
+        // store.deleteSong();
+        store.addDeleteSongTransaction(store.markForDeletionSong)
         store.hideDeleteSongModal();
     }
 

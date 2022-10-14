@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { StrictMode, useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
 
 function SongCard(props) {
@@ -40,14 +40,20 @@ function SongCard(props) {
         event.stopPropagation();
         // store.markSongForDeletion(index)
         // store.showDeleteSongModal();
-        store.addDeleteSongTransaction(index);
+        
+        //store.addDeleteSongTransaction(index);
+        store.markSongForDeletion(index)
+        store.showDeleteSongModal()
 
     }
     function handleEditSong(event){
         event.stopPropagation();
         // store.markSongForEdit(index)
         // store.showEditSongModal();
-        store.addEditSongTransaction(index)
+        
+        //store.addEditSongTransaction(index)
+        store.markSongForEdit(index)
+        store.showEditSongModal()
 
     }
     return (

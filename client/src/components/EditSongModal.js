@@ -3,10 +3,9 @@ import { GlobalStoreContext } from '../store'
 
 function EditSongModal(){
     const { store } = useContext(GlobalStoreContext);
-
-    
     function handleConfirmDeleteList(){
-        store.editSong(document.getElementById("newTitle").value,document.getElementById("newArtist").value,document.getElementById("newYTID").value, store.markForEdit);
+        //store.editSong(document.getElementById("newTitle").value,document.getElementById("newArtist").value,document.getElementById("newYTID").value, store.markForEdit);
+        store.addEditSongTransaction(store.markForEdit)
         store.hideEditSongModal();
     }
 
