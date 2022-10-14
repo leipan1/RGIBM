@@ -224,6 +224,15 @@ input {
   font-size: x-large;
 }
 
+.modal-center-edit {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 33% 33% 33%;
+  gap: 10px 20px;
+  font-size: xx-large;
+
+}
+
 
 .modal-header,
 .modal-close {

@@ -37,10 +37,15 @@ function SongCard(props) {
     }
     function handleDeleteSong(event){
         event.stopPropagation();
-        console.log("song to be marked for deletion:")
-        console.log(index)
         store.markSongForDeletion(index)
         store.showDeleteSongModal();
+
+    }
+    function handleEditSong(event){
+        event.stopPropagation();
+        console.log("edit song")
+        store.markSongForEdit(index)
+        store.showEditSongModal();
 
     }
     return (
@@ -53,6 +58,7 @@ function SongCard(props) {
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            onDoubleClick={handleEditSong}
             draggable="true"
         >
             {index + 1}.
