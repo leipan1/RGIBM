@@ -1,6 +1,7 @@
 import { createContext, startTransition, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
+import AddSong_Transaction from '../transaction/AddSong_Transaction';
 
 
 export const GlobalStoreContext = createContext({});
@@ -423,6 +424,10 @@ export const useGlobalStore = () => {
         }reloadList(list)
     }
 
+    store.addAddSongTransaction = function (){
+        let transaction= new AddSong_Transaction(store)
+        tps.addTransaction(transaction)
+    }
 
 
     return { store, storeReducer };
