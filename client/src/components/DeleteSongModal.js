@@ -4,8 +4,9 @@ import { GlobalStoreContext } from '../store'
 function DeleteSongModal(){
     const { store } = useContext(GlobalStoreContext);
     let title=""
-    console.log("delete song modal:"+store.markSongForDeletionSong)
+    //console.log("delete song modal:"+store.markForDeletionSong)
     if(store.markForDeletionSong >=0 && store.getPlaylistSize()>0){
+        //console.log("got the title!")
         title=store.currentList.songs[store.markForDeletionSong].title;
     }
 

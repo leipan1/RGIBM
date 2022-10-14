@@ -47,6 +47,8 @@ export const useGlobalStore = () => {
         markForDeletion: null,
         markForDeletionSong:-1,
         markForEdit: -1,
+        canUndo: false,
+        canRedo: false,
     });
 
 
@@ -64,7 +66,9 @@ export const useGlobalStore = () => {
                     listNameActive: false,
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
-                    markForEdit: store.markForEdit
+                    markForEdit: store.markForEdit,
+                    canUndo:tps.hasTransactionToUndo(),
+                    canRedo:tps.hasTransactionToRedo(),
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -76,7 +80,9 @@ export const useGlobalStore = () => {
                     listNameActive: false,
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
-                    markForEdit: store.markForEdit
+                    markForEdit: store.markForEdit,
+                    canUndo:tps.hasTransactionToUndo(),
+                    canRedo:tps.hasTransactionToRedo(),
                 })
             }
             // CREATE A NEW LIST
@@ -88,7 +94,9 @@ export const useGlobalStore = () => {
                     listNameActive: false,
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
-                    markForEdit: store.markForEdit
+                    markForEdit: store.markForEdit,
+                    canUndo:tps.hasTransactionToUndo(),
+                    canRedo:tps.hasTransactionToRedo(),
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -100,7 +108,9 @@ export const useGlobalStore = () => {
                     listNameActive: false,
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
-                    markForEdit: store.markForEdit
+                    markForEdit: store.markForEdit,
+                    canUndo:tps.hasTransactionToUndo(),
+                    canRedo:tps.hasTransactionToRedo(),
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -112,7 +122,9 @@ export const useGlobalStore = () => {
                     listNameActive: false,
                     markForDeletion: payload,
                     markForDeletionSong:store.markForDeletionSong,
-                    markForEdit: store.markForEdit
+                    markForEdit: store.markForEdit,
+                    canUndo:tps.hasTransactionToUndo(),
+                    canRedo:tps.hasTransactionToRedo(),
                 });
             }
             case GlobalStoreActionType.MARK_SONG_FOR_DELETION:{
@@ -123,7 +135,9 @@ export const useGlobalStore = () => {
                     listNameActive:false,
                     markForDeletion:store.markForDeletion,
                     markForDeletionSong:payload,
-                    markForEdit: store.markForEdit
+                    markForEdit: store.markForEdit,
+                    canUndo:tps.hasTransactionToUndo(),
+                    canRedo:tps.hasTransactionToRedo(),
                 })
             }
             case GlobalStoreActionType.MARK_SONG_FOR_EDIT:{
@@ -135,6 +149,8 @@ export const useGlobalStore = () => {
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit:payload,
+                    canUndo:tps.hasTransactionToUndo(),
+                    canRedo:tps.hasTransactionToRedo(),
                 })
             }
             // UPDATE A LIST
@@ -146,7 +162,9 @@ export const useGlobalStore = () => {
                     listNameActive: false,
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
-                    markForEdit: store.markForEdit
+                    markForEdit: store.markForEdit,
+                    canUndo:tps.hasTransactionToUndo(),
+                    canRedo:tps.hasTransactionToRedo(),
                 });
             }
             // START EDITING A LIST NAME
@@ -158,7 +176,9 @@ export const useGlobalStore = () => {
                     listNameActive: true,
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
-                    markForEdit: store.markForEdit
+                    markForEdit: store.markForEdit,
+                    canUndo:tps.hasTransactionToUndo(),
+                    canRedo:tps.hasTransactionToRedo(),
                 });
             }
             default:
@@ -209,6 +229,7 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
         });
+        tps.clearAllTransactions()
     }
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
@@ -301,8 +322,11 @@ export const useGlobalStore = () => {
         let index=store.markForDeletionSong
         console.log("deleting song at index:"+index)
         store.currentList.songs.splice(index,1)
-        console.log("new list after deleting the song:")
-        console.log(store.currentList.songs)
+        // console.log("new list after deleting the song:")
+        // console.log(store.currentList.songs)
+        //store.markSongForDeletion(-1)
+        store.markForDeletionSong=-1
+        //console.log("new:::"+store.markForDeletionSong)
         async function asyncUpdatePlaylist(currentList){
             let response= await api.editPlaylist(currentList._id,currentList)
             if(response.data.success){
@@ -312,7 +336,6 @@ export const useGlobalStore = () => {
                 })
             }
         }asyncUpdatePlaylist(store.currentList)
-        
     }
 
     store.editSong=function(newTitle, newArtist, newYTID){
@@ -332,6 +355,7 @@ export const useGlobalStore = () => {
                 })
             }
         }asyncUpdatePlaylist(store.currentList)
+        console.log("edited song at index:"+index)
     }
 
 
@@ -347,7 +371,6 @@ export const useGlobalStore = () => {
             type:GlobalStoreActionType.MARK_SONG_FOR_DELETION,
             payload:index
         })
-        console.log("the index:"+index)
         // storeReducer({
         //     type:GlobalStoreActionType.MARK_SONG_FOR_DELETION,
         //     payload:-1

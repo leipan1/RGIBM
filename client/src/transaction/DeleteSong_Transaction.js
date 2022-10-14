@@ -15,7 +15,8 @@ export default class DeleteSong_Transaction extends jsTPS_Transaction {
 
     doTransaction() {
         this.store.markSongForDeletion(this.index)
-        //console.log("finish marking song for deletion")
+        //this.store.markForDeletionSong=this.index
+        //console.log("finish marking song for deletion:"+this.store.markForDeletionSong)
         //TODO:: IF THERE IS REDO, DONT SHOW MODAL!!
         this.store.showDeleteSongModal()
     }
