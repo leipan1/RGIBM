@@ -17,7 +17,6 @@ export default class EditSong_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-        console.log("this index:"+this.index)
         this.store.markSongForEdit(this.index)
         this.store.showEditSongModal();
     }
@@ -26,6 +25,6 @@ export default class EditSong_Transaction extends jsTPS_Transaction {
         console.log("this index:"+this.index)
         this.store.markSongForEdit(this.index)
         //this.store.markForEdit+=1;
-        this.store.editSong(this.oldTitle,this.oldArtist,this.oldYTID)
+        this.store.editSong(this.oldTitle,this.oldArtist,this.oldYTID,this.index)
     }
 }

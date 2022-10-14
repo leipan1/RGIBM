@@ -21,14 +21,9 @@ function EditToolbar() {
     let redoClass=enabledButtonClass
     let addSongClass=enabledButtonClass
     let closeClass=enabledButtonClass
-
-    // let canUndo= tps.hasTransactionToUndo();
-    // let canRedo= tps.hasTransactionToRedo();
-    // let canAddSong= store.currentList!==null;
-    // let canClose= store.currentList!==null;
     
     if(!store.canUndo){
-        console.log("no undo")
+        // console.log("no undo")
         undoClass += "-disabled"
     }
     if(!store.canRedo){

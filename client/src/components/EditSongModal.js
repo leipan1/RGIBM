@@ -6,7 +6,7 @@ function EditSongModal(){
 
     
     function handleConfirmDeleteList(){
-        store.editSong(document.getElementById("newTitle").value,document.getElementById("newArtist").value,document.getElementById("newYTID").value);
+        store.editSong(document.getElementById("newTitle").value,document.getElementById("newArtist").value,document.getElementById("newYTID").value, store.markForEdit);
         store.hideEditSongModal();
     }
 

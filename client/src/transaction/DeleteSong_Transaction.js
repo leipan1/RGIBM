@@ -19,6 +19,7 @@ export default class DeleteSong_Transaction extends jsTPS_Transaction {
         //console.log("finish marking song for deletion:"+this.store.markForDeletionSong)
         //TODO:: IF THERE IS REDO, DONT SHOW MODAL!!
         this.store.showDeleteSongModal()
+
     }
     
     undoTransaction() {
@@ -27,6 +28,6 @@ export default class DeleteSong_Transaction extends jsTPS_Transaction {
         this.store.moveSong(length-1,this.index)
         this.store.markSongForEdit(this.index)
         //console.log("finish marking song for edit:"+this.store.markForEdit)
-        this.store.editSong(this.oldTitle,this.oldArtist,this.oldYTID)
+        this.store.editSong(this.oldTitle,this.oldArtist,this.oldYTID,this.index)
     }
 }

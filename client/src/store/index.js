@@ -338,14 +338,15 @@ export const useGlobalStore = () => {
         }asyncUpdatePlaylist(store.currentList)
     }
 
-    store.editSong=function(newTitle, newArtist, newYTID){
-        let index=store.markForEdit
-        //console.log("edit song index:"+store.markForEdit)
+    store.editSong=function(newTitle, newArtist, newYTID, index){
+        console.log("index to edit:::"+index);
+        let indexToEdit=index
+        console.log("edit song index:"+store.markForEdit)
         // console.log("current list:")
         //console.log(store.currentList)
-        store.currentList.songs[index].title=newTitle
-        store.currentList.songs[index].artist=newArtist
-        store.currentList.songs[index].youTubeId=newYTID
+        store.currentList.songs[indexToEdit].title=newTitle
+        store.currentList.songs[indexToEdit].artist=newArtist
+        store.currentList.songs[indexToEdit].youTubeId=newYTID
         async function asyncUpdatePlaylist(currentList){
             let response= await api.editPlaylist(currentList._id,currentList)
             if(response.data.success){
@@ -388,30 +389,36 @@ export const useGlobalStore = () => {
     }
 
     store.showDeleteListModal= function () {
+        store.disableButton()
         let modal=document.getElementById("delete-list-modal");
         modal.classList.add("is-visible");
     }
 
     store.showDeleteSongModal= function(){
+        store.disableButton()
         let modal=document.getElementById("delete-song-modal")
         modal.classList.add("is-visible");
     }
     store.showEditSongModal= function(){
+        store.disableButton()
         let modal= document.getElementById("edit-song-modal")
         modal.classList.add("is-visible")
     }
 
     store.hideDeleteListModal= function(){
+        store.enableButton()
         let modal=document.getElementById("delete-list-modal");
         modal.classList.remove("is-visible");
     }
 
     store.hideDeleteSongModal= function(){
+        store.enableButton()
         let modal=document.getElementById("delete-song-modal")
         modal.classList.remove("is-visible");
     }
     
     store.hideEditSongModal=function(){
+        store.enableButton()
         let modal=document.getElementById("edit-song-modal")
         modal.classList.remove("is-visible")
     }
@@ -488,6 +495,37 @@ export const useGlobalStore = () => {
     store.addMoveSongTransaction=function(oldIndex, newIndex){
         let transaction= new MoveSong_Transaction(store,oldIndex, newIndex)
         tps.addTransaction(transaction)
+    }
+
+    store.disableButton=function(){
+        //console.log("disabling buttons")
+        let addSongButton=document.getElementById("add-song-button")
+        addSongButton.className="playlister-button-disabled"
+        let undoButton=document.getElementById("undo-button")
+        undoButton.className="playlister-button-disabled"
+        let redoButton=document.getElementById("redo-button")
+        redoButton.className="playlister-button-disabled"
+        let closeButton=document.getElementById("close-button")
+        closeButton.className="playlister-button-disabled"
+    }
+
+    store.enableButton=function(){
+        //console.log("enabling buttons")
+        if(store.currentList!==null){
+            let addSongButton=document.getElementById("add-song-button")
+            addSongButton.className="playlister-button"
+
+            let closeButton=document.getElementById("close-button")
+            closeButton.className="playlister-button" 
+        }
+        if(tps.hasTransactionToUndo()){
+            let undoButton=document.getElementById("undo-button")
+            undoButton.className="playlister-button"
+        }
+        if(tps.hasTransactionToRedo()){
+            let redoButton=document.getElementById("redo-button")
+            redoButton.className="playlister-button"
+        }
     }
 
 
