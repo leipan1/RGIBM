@@ -15,6 +15,8 @@ export default class DeleteSong_Transaction extends jsTPS_Transaction {
 
     doTransaction() {
         this.store.markSongForDeletion(this.index)
+        //console.log("finish marking song for deletion")
+        //TODO:: IF THERE IS REDO, DONT SHOW MODAL!!
         this.store.showDeleteSongModal()
     }
     
@@ -23,6 +25,7 @@ export default class DeleteSong_Transaction extends jsTPS_Transaction {
         let length=this.store.getPlaylistSize()
         this.store.moveSong(length-1,this.index)
         this.store.markSongForEdit(this.index)
+        //console.log("finish marking song for edit:"+this.store.markForEdit)
         this.store.editSong(this.oldTitle,this.oldArtist,this.oldYTID)
     }
 }

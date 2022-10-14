@@ -316,9 +316,9 @@ export const useGlobalStore = () => {
 
     store.editSong=function(newTitle, newArtist, newYTID){
         let index=store.markForEdit
-        console.log("index:"+store.markForEdit)
-        console.log("current list:")
-        console.log(store.currentList)
+        //console.log("edit song index:"+store.markForEdit)
+        // console.log("current list:")
+        //console.log(store.currentList)
         store.currentList.songs[index].title=newTitle
         store.currentList.songs[index].artist=newArtist
         store.currentList.songs[index].youTubeId=newYTID
@@ -346,10 +346,11 @@ export const useGlobalStore = () => {
             type:GlobalStoreActionType.MARK_SONG_FOR_DELETION,
             payload:index
         })
-        storeReducer({
-            type:GlobalStoreActionType.MARK_SONG_FOR_DELETION,
-            payload:-1
-        })
+        console.log("the index:"+index)
+        // storeReducer({
+        //     type:GlobalStoreActionType.MARK_SONG_FOR_DELETION,
+        //     payload:-1
+        // })
     }
 
     store.markSongForEdit= function(index){
