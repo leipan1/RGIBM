@@ -2,7 +2,6 @@ import { createContext, startTransition, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
 
-import DeleteListModal from '../components/DeleteListModal.js';
 
 export const GlobalStoreContext = createContext({});
 /*
@@ -22,7 +21,8 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
-    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION"
+    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
+    MARK_SONG_FOR_DELETION: "MARK_SONG_FOR_DELETION"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -97,6 +97,15 @@ export const useGlobalStore = () => {
                     listNameActive: false,
                     markForDeletion: payload,
                 });
+            }
+            case GlobalStoreActionType.MARK_SONG_FOR_DELETION:{
+                return setStore({
+                    idNamePairs:store.idNamePairs,
+                    currentList:store.currentList,
+                    newListCounter:store.newListCounter,
+                    listNameActive:false,
+                    markForDeletion:payload
+                })
             }
             // UPDATE A LIST
             case GlobalStoreActionType.SET_CURRENT_LIST: {
@@ -254,12 +263,57 @@ export const useGlobalStore = () => {
 
     }
 
+    store.deleteSong=function(){
+        let deleteSongId=store.markForDeletion._id
+        let newPlaylist=store.currentList.songs.filter(song=>song._id!==deleteSongId)
+        store.currentList.songs=newPlaylist
+        async function asyncUpdatePlaylist(currentList){
+            let response= await api.getPlaylistById(currentList._id)
+            if(response.data.success){
+                storeReducer({
+                    type:GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload:currentList
+                })
+            }
+        }asyncUpdatePlaylist(store.currentList)
+
+        
+    }
+
+
+
     store.markListForDeletion= function (idNamePair){
-        console.log("id name pair::"+idNamePair.name)
         storeReducer({
             type:GlobalStoreActionType.MARK_LIST_FOR_DELETION,
             payload:idNamePair
         })
+    }
+
+    store.markSongForDeletion= function (song){
+        storeReducer({
+            type:GlobalStoreActionType.MARK_SONG_FOR_DELETION,
+            payload:song
+        })
+    }
+
+    store.showDeleteListModal= function () {
+        let modal=document.getElementById("delete-list-modal");
+        modal.classList.add("is-visible");
+    }
+
+    store.showDeleteSongModal= function(){
+        let modal=document.getElementById("delete-song-modal")
+        modal.classList.add("is-visible");
+    }
+
+    store.hideDeleteListModal= function(){
+        let modal=document.getElementById("delete-list-modal");
+        modal.classList.remove("is-visible");
+    }
+
+    store.hideDeleteSongModal= function(){
+        let modal=document.getElementById("delete-song-modal")
+        modal.classList.remove("is-visible");
     }
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
@@ -268,16 +322,6 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
             payload: null
         });
-    }
-
-    store.showDeleteListModal= function () {
-        let modal=document.getElementById("delete-list-modal");
-        modal.classList.add("is-visible");
-    }
-
-    store.hideDeleteListModal= function(){
-        let modal=document.getElementById("delete-list-modal");
-        modal.classList.remove("is-visible");
     }
 
     store.addSong=function(){

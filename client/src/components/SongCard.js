@@ -11,7 +11,7 @@ function SongCard(props) {
     function handleDragStart (event){
         event.dataTransfer.setData("song",event.target.id)
     }
-    function handleDragOver (event){
+    function handleDragOver (event){  
         event.preventDefault();
     }
     function handleDragEnter (event){
@@ -34,6 +34,12 @@ function SongCard(props) {
         sourceId=parseInt(sourceId)
         targetId=parseInt(targetId)
         store.moveSong(sourceId,targetId)
+    }
+    function handleDeleteSong(event){
+        event.stopPropagation();
+        store.markSongForDeletion(song)
+        store.showDeleteSongModal();
+
     }
     return (
         <div
@@ -59,6 +65,7 @@ function SongCard(props) {
                 id={"remove-song-" + index}
                 className="list-card-button"
                 value={"\u2715"}
+                onClick={handleDeleteSong}
             />
         </div>
     );

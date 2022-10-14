@@ -3,36 +3,37 @@ import { GlobalStoreContext } from '../store'
 
 function DeleteListModal(){
     const { store } = useContext(GlobalStoreContext);
-    let name=""
-    console.log(store.markForDeletion)
+    let title=""
     if(store.markForDeletion){
-        name=store.markForDeletion.name;
+        title=store.markForDeletion.title;
     }
 
     
     function handleConfirmDeleteList(){
-        store.deleteList();
-        store.hideDeleteListModal();
+        console.log("confirm delete")
+        store.deleteSong();
+        store.hideDeleteSongModal();
     }
 
 
     function handleCancelDeleteList(){
-        store.hideDeleteListModal();
+        console.log("cancel delete")
+        store.hideDeleteSongModal();
     }
 
 
     return (
         <div 
             className="modal"
-            id="delete-list-modal"
+            id="delete-song-modal"
             data-animation="slideInOutLeft">
             <div className="modal-root modal-dialog" id='verify-delete-list-root'>
                 <div className="modal-north modal-header ">
-                    Delete the {name} playlist?
+                    Delete song?
                 </div>
                 <div className="modal-center">
                     <div className="modal-center-content">
-                        Are you sure you wish to permanently delete the {name} playlist?
+                        Are you sure you wish to permanently remove {title} from the playlist?
                     </div>
                 </div>
                 <div className="modal-south modal-footer" id="confirm-cancel-container">
