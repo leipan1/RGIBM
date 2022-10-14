@@ -1,11 +1,14 @@
-import React, { Component, useContext } from 'react';
+import React, { Component, StrictMode, useContext } from 'react';
 import { GlobalStoreContext } from '../store'
 
 function DeleteSongModal(){
     const { store } = useContext(GlobalStoreContext);
     let title=""
-    if(store.markForDeletion){
-        title=store.markForDeletion.title;
+    console.log("delete song modal")
+    console.log(store.markForDeletionSong)
+    if(store.markForDeletionSong >=0){
+        console.log(":))")
+        title=store.currentList.songs[store.markForDeletionSong].title;
     }
 
     

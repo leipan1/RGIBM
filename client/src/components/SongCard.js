@@ -44,9 +44,9 @@ function SongCard(props) {
     }
     function handleEditSong(event){
         event.stopPropagation();
-        console.log("edit song")
-        store.markSongForEdit(index)
-        store.showEditSongModal();
+        // store.markSongForEdit(index)
+        // store.showEditSongModal();
+        store.addEditSongTransaction(index)
 
     }
     return (

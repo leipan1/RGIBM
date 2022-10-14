@@ -4,6 +4,8 @@ import { GlobalStoreContext } from '../store'
 function DeleteListModal(){
     const { store } = useContext(GlobalStoreContext);
     let name=""
+    // console.log("delete list modal")
+    // console.log(store.markForDeletion)
     if(store.markForDeletion){
         name=store.markForDeletion.name;
     }

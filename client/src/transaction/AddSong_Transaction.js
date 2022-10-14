@@ -14,7 +14,8 @@ export default class AddSong_Transaction extends jsTPS_Transaction {
     }
     
     undoTransaction() {
-        this.store.markSongForDeletion(this.store.getPlaylistSize())
+        console.log("size:"+this.store.getPlaylistSize())
+        this.store.markSongForDeletion(this.store.getPlaylistSize()-1)
         this.store.deleteSong()
     }
 }

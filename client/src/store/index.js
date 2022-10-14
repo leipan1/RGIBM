@@ -3,6 +3,7 @@ import jsTPS from '../common/jsTPS'
 import api from '../api'
 import AddSong_Transaction from '../transaction/AddSong_Transaction';
 import DeleteSong_Transaction from '../transaction/DeleteSong_Transaction';
+import EditSong_Transaction from '../transaction/EditSong_Transaction';
 
 
 export const GlobalStoreContext = createContext({});
@@ -43,7 +44,8 @@ export const useGlobalStore = () => {
         newListCounter: 0,
         listNameActive: false,
         markForDeletion: null,
-        markForEdit: null,
+        markForDeletionSong:-1,
+        markForEdit: -1,
     });
 
 
@@ -60,6 +62,7 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     markForDeletion: store.markForDeletion,
+                    markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit
                 });
             }
@@ -71,6 +74,7 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     markForDeletion: store.markForDeletion,
+                    markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit
                 })
             }
@@ -82,6 +86,7 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter + 1,
                     listNameActive: false,
                     markForDeletion: store.markForDeletion,
+                    markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit
                 })
             }
@@ -93,6 +98,7 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     markForDeletion: store.markForDeletion,
+                    markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit
                 });
             }
@@ -104,6 +110,7 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     markForDeletion: payload,
+                    markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit
                 });
             }
@@ -113,7 +120,8 @@ export const useGlobalStore = () => {
                     currentList:store.currentList,
                     newListCounter:store.newListCounter,
                     listNameActive:false,
-                    markForDeletion:payload,
+                    markForDeletion:store.markForDeletion,
+                    markForDeletionSong:payload,
                     markForEdit: store.markForEdit
                 })
             }
@@ -124,6 +132,7 @@ export const useGlobalStore = () => {
                     newListCounter:store.newListCounter,
                     listNameActive:false,
                     markForDeletion: store.markForDeletion,
+                    markForDeletionSong:store.markForDeletionSong,
                     markForEdit:payload,
                 })
             }
@@ -135,6 +144,7 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     markForDeletion: store.markForDeletion,
+                    markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit
                 });
             }
@@ -146,6 +156,7 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: true,
                     markForDeletion: store.markForDeletion,
+                    markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit
                 });
             }
@@ -271,6 +282,8 @@ export const useGlobalStore = () => {
     //~~DELETE LIST FUNCTION
     store.deleteList=function(){
         let playlist=store.markForDeletion
+        // console.log("playlist that was marked:")
+        // console.log(store.markForDeletion)
         async function asyncDeletePlaylist(playlist){
             let response = await api.deletePlaylist(playlist._id)
             if(response.data.success){
@@ -284,8 +297,11 @@ export const useGlobalStore = () => {
     }
 
     store.deleteSong=function(){
-        let index=store.markForDeletion
+        let index=store.markForDeletionSong
+        console.log("deleting song at index:"+index)
         store.currentList.songs.splice(index,1)
+        console.log("new list after deleting the song:")
+        console.log(store.currentList.songs)
         async function asyncUpdatePlaylist(currentList){
             let response= await api.editPlaylist(currentList._id,currentList)
             if(response.data.success){
@@ -295,12 +311,14 @@ export const useGlobalStore = () => {
                 })
             }
         }asyncUpdatePlaylist(store.currentList)
-
         
     }
 
     store.editSong=function(newTitle, newArtist, newYTID){
         let index=store.markForEdit
+        console.log("index:"+store.markForEdit)
+        console.log("current list:")
+        console.log(store.currentList)
         store.currentList.songs[index].title=newTitle
         store.currentList.songs[index].artist=newArtist
         store.currentList.songs[index].youTubeId=newYTID
@@ -328,8 +346,10 @@ export const useGlobalStore = () => {
             type:GlobalStoreActionType.MARK_SONG_FOR_DELETION,
             payload:index
         })
-        console.log("marked song for deletion:")
-        console.log(store.markForDeletion)
+        storeReducer({
+            type:GlobalStoreActionType.MARK_SONG_FOR_DELETION,
+            payload:-1
+        })
     }
 
     store.markSongForEdit= function(index){
@@ -432,6 +452,11 @@ export const useGlobalStore = () => {
 
     store.addDeleteSongTransaction=function(index){
         let transaction=new DeleteSong_Transaction(store,index)
+        tps.addTransaction(transaction)
+    }
+
+    store.addEditSongTransaction=function(index){
+        let transaction=new EditSong_Transaction(store,index)
         tps.addTransaction(transaction)
     }
 

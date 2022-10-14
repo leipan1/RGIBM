@@ -3,7 +3,7 @@ import jsTPS_Transaction from "../common/jsTPS.js"
  * @author McKilla Gorilla
  * @author leipan
  */
-export default class DeleteSong_Transaction extends jsTPS_Transaction {
+export default class EditSong_Transaction extends jsTPS_Transaction {
     constructor(store,index) {
         super();
         this.store = store;
@@ -14,14 +14,11 @@ export default class DeleteSong_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-        this.store.markSongForDeletion(this.index)
-        this.store.showDeleteSongModal()
+        this.store.markSongForEdit(this.index)
+        this.store.showEditSongModal();
     }
     
     undoTransaction() {
-        this.store.addSong()
-        let length=this.store.getPlaylistSize()
-        this.store.moveSong(length-1,this.index)
         this.store.markSongForEdit(this.index)
         this.store.editSong(this.oldTitle,this.oldArtist,this.oldYTID)
     }
