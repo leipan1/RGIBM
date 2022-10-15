@@ -528,6 +528,13 @@ export const useGlobalStore = () => {
         }
     }
 
+    store.canUndoCheck=function(){
+       return tps.hasTransactionToUndo()
+    }
+    store.canRedoCheck=function(){
+        return tps.hasTransactionToRedo()
+    }
+
 
     return { store, storeReducer };
 }

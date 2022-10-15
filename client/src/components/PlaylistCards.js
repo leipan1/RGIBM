@@ -4,7 +4,7 @@ import SongCard from './SongCard.js'
 import { GlobalStoreContext } from '../store'
 import DeleteSongModal from './DeleteSongModal'
 import EditSongModal from './EditSongModal'
-import jsTPS from '../common/jsTPS.js'
+import { useCallback, useEffect } from 'react';
 /*
     This React component lets us edit a loaded list, which only
     happens when we are on the proper route.
@@ -15,28 +15,33 @@ function PlaylistCards() {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
 
-    // function keydownHandler(e){
-    //     let tps=new jsTPS()
-    //     if(e.keyCode===90 && e.ctrlKey){
-    //         alert("undo")
-    //         if (tps.hasTransactionToUndo()){
-    //             this.undo()
-    //         }
-            
-    //     }
-    //     if(e.keyCode===89 && e.ctrlKey){
-    //         if(tps.hasTransactionToRedo())
-    //             this.redo()
-    //     }
-    // }
+    
+    const handleKeyPress = useCallback((event) => {
+        if(event.ctrlKey){
+            if(event.key==="z"){
+                if(store.canUndoCheck()){
+                    //console.log("can undo")
+                    store.undo()
+                }
+            }
+            else if(event.key==="y"){
+                if(store.canRedoCheck()){
+                    //console.log("can undo")
+                    store.redo()
+                }
+            }
+        }
+      }, []);
 
-    // function componentDidMount(){
-    //     document.addEventListener('keydown',keydownHandler());
-    // }
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyPress);
 
-    // function componentWillUnmount(){
-    //     document.removeEventListener('keydown',keydownHandler());
-    // }
+        return () => {
+          document.removeEventListener('keydown', handleKeyPress);
+        };
+      }, [handleKeyPress]);
+    
+
 
     return (
         <div id="playlist-cards">
