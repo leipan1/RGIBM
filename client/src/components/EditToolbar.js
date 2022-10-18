@@ -52,7 +52,7 @@ function EditToolbar() {
 
     }
     let editStatus = false;
-    if (store.isListNameEditActive) {
+    if (store.isListNameEditActive || !store.currentList) {
         editStatus = true;
     }
     return (
