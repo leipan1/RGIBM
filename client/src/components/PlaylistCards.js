@@ -2,8 +2,6 @@ import { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import SongCard from './SongCard.js'
 import { GlobalStoreContext } from '../store'
-import DeleteSongModal from './DeleteSongModal'
-import EditSongModal from './EditSongModal'
 import { useCallback, useEffect } from 'react';
 /*
     This React component lets us edit a loaded list, which only
@@ -55,8 +53,6 @@ function PlaylistCards() {
                 />
             ))
         }
-        <DeleteSongModal/>
-        <EditSongModal/>
         </div>
     )
 }

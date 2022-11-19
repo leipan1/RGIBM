@@ -1,10 +1,5 @@
 import { createContext, startTransition, useState } from 'react'
-import jsTPS from '../common/jsTPS'
 import api from '../api'
-import AddSong_Transaction from '../transaction/AddSong_Transaction';
-import DeleteSong_Transaction from '../transaction/DeleteSong_Transaction';
-import EditSong_Transaction from '../transaction/EditSong_Transaction';
-import MoveSong_Transaction from '../transaction/MoveSong_Transaction';
 
 
 export const GlobalStoreContext = createContext({});
@@ -30,8 +25,7 @@ export const GlobalStoreActionType = {
     MARK_SONG_FOR_EDIT: "MARK_SONG_FOR_EDIT",
 }
 
-// WE'LL NEED THIS TO PROCESS TRANSACTIONS
-const tps = new jsTPS();
+
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
 // AVAILABLE TO THE REST OF THE APPLICATION
@@ -67,8 +61,6 @@ export const useGlobalStore = () => {
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
-                    canUndo:tps.hasTransactionToUndo(),
-                    canRedo:tps.hasTransactionToRedo(),
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -81,8 +73,6 @@ export const useGlobalStore = () => {
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
-                    canUndo:tps.hasTransactionToUndo(),
-                    canRedo:tps.hasTransactionToRedo(),
                 })
             }
             // CREATE A NEW LIST
@@ -95,8 +85,6 @@ export const useGlobalStore = () => {
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
-                    canUndo:tps.hasTransactionToUndo(),
-                    canRedo:tps.hasTransactionToRedo(),
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -109,8 +97,6 @@ export const useGlobalStore = () => {
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
-                    canUndo:tps.hasTransactionToUndo(),
-                    canRedo:tps.hasTransactionToRedo(),
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -123,8 +109,6 @@ export const useGlobalStore = () => {
                     markForDeletion: payload,
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
-                    canUndo:tps.hasTransactionToUndo(),
-                    canRedo:tps.hasTransactionToRedo(),
                 });
             }
             case GlobalStoreActionType.MARK_SONG_FOR_DELETION:{
@@ -136,8 +120,6 @@ export const useGlobalStore = () => {
                     markForDeletion:store.markForDeletion,
                     markForDeletionSong:payload,
                     markForEdit: store.markForEdit,
-                    canUndo:tps.hasTransactionToUndo(),
-                    canRedo:tps.hasTransactionToRedo(),
                 })
             }
             case GlobalStoreActionType.MARK_SONG_FOR_EDIT:{
@@ -149,8 +131,6 @@ export const useGlobalStore = () => {
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit:payload,
-                    canUndo:tps.hasTransactionToUndo(),
-                    canRedo:tps.hasTransactionToRedo(),
                 })
             }
             // UPDATE A LIST
@@ -163,8 +143,6 @@ export const useGlobalStore = () => {
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
-                    canUndo:tps.hasTransactionToUndo(),
-                    canRedo:tps.hasTransactionToRedo(),
                 });
             }
             // START EDITING A LIST NAME
@@ -177,8 +155,6 @@ export const useGlobalStore = () => {
                     markForDeletion: store.markForDeletion,
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
-                    canUndo:tps.hasTransactionToUndo(),
-                    canRedo:tps.hasTransactionToRedo(),
                 });
             }
             default:
@@ -229,26 +205,25 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
         });
-        tps.clearAllTransactions()
     }
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
-    store.loadIdNamePairs = function () {
-        async function asyncLoadIdNamePairs() {
-            const response = await api.getPlaylistPairs();
-            if (response.data.success) {
-                let pairsArray = response.data.idNamePairs;
-                storeReducer({
-                    type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
-                    payload: pairsArray
-                });
-            }
-            else {
-                console.log("API FAILED TO GET THE LIST PAIRS");
-            }
-        }
-        asyncLoadIdNamePairs();
-    }
+    // store.loadIdNamePairs = function () {
+    //     async function asyncLoadIdNamePairs() {
+    //         const response = await api.getPlaylistPairs();
+    //         if (response.data.success) {
+    //             let pairsArray = response.data.idNamePairs;
+    //             storeReducer({
+    //                 type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+    //                 payload: pairsArray
+    //             });
+    //         }
+    //         else {
+    //             console.log("API FAILED TO GET THE LIST PAIRS");
+    //         }
+    //     }
+    //     asyncLoadIdNamePairs();
+    // }
 
     store.setCurrentList = function (id) {
         async function asyncSetCurrentList(id) {
@@ -269,12 +244,6 @@ export const useGlobalStore = () => {
     }
     store.getPlaylistSize = function() {
         return store.currentList.songs.length;
-    }
-    store.undo = function () {
-        tps.undoTransaction();
-    }
-    store.redo = function () {
-        tps.doTransaction();
     }
 
     //~~CREATE NEW LIST FUNCTION
@@ -388,40 +357,7 @@ export const useGlobalStore = () => {
         document.getElementById("newYTID").value=store.currentList.songs[index].youTubeId
     }
 
-    store.showDeleteListModal= function () {
-        store.disableButton()
-        let modal=document.getElementById("delete-list-modal");
-        modal.classList.add("is-visible");
-    }
 
-    store.showDeleteSongModal= function(){
-        store.disableButton()
-        let modal=document.getElementById("delete-song-modal")
-        modal.classList.add("is-visible");
-    }
-    store.showEditSongModal= function(){
-        store.disableButton()
-        let modal= document.getElementById("edit-song-modal")
-        modal.classList.add("is-visible")
-    }
-
-    store.hideDeleteListModal= function(){
-        store.enableButton()
-        let modal=document.getElementById("delete-list-modal");
-        modal.classList.remove("is-visible");
-    }
-
-    store.hideDeleteSongModal= function(){
-        store.enableButton()
-        let modal=document.getElementById("delete-song-modal")
-        modal.classList.remove("is-visible");
-    }
-    
-    store.hideEditSongModal=function(){
-        store.enableButton()
-        let modal=document.getElementById("edit-song-modal")
-        modal.classList.remove("is-visible")
-    }
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
     store.setlistNameActive = function () {
@@ -477,25 +413,6 @@ export const useGlobalStore = () => {
         }reloadList(list)
     }
 
-    store.addAddSongTransaction = function (){
-        let transaction= new AddSong_Transaction(store)
-        tps.addTransaction(transaction)
-    }
-
-    store.addDeleteSongTransaction=function(index){
-        let transaction=new DeleteSong_Transaction(store,index)
-        tps.addTransaction(transaction)
-    }
-
-    store.addEditSongTransaction=function(index){
-        let transaction=new EditSong_Transaction(store,index)
-        tps.addTransaction(transaction)
-    }
-
-    store.addMoveSongTransaction=function(oldIndex, newIndex){
-        let transaction= new MoveSong_Transaction(store,oldIndex, newIndex)
-        tps.addTransaction(transaction)
-    }
 
     store.disableButton=function(){
         //console.log("disabling buttons")
@@ -509,31 +426,7 @@ export const useGlobalStore = () => {
         closeButton.className="playlister-button-disabled"
     }
 
-    store.enableButton=function(){
-        //console.log("enabling buttons")
-        if(store.currentList!==null){
-            let addSongButton=document.getElementById("add-song-button")
-            addSongButton.className="playlister-button"
 
-            let closeButton=document.getElementById("close-button")
-            closeButton.className="playlister-button" 
-        }
-        if(tps.hasTransactionToUndo()){
-            let undoButton=document.getElementById("undo-button")
-            undoButton.className="playlister-button"
-        }
-        if(tps.hasTransactionToRedo()){
-            let redoButton=document.getElementById("redo-button")
-            redoButton.className="playlister-button"
-        }
-    }
-
-    store.canUndoCheck=function(){
-       return tps.hasTransactionToUndo()
-    }
-    store.canRedoCheck=function(){
-        return tps.hasTransactionToRedo()
-    }
 
 
     return { store, storeReducer };

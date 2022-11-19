@@ -103,7 +103,7 @@ body {
   cursor: not-allowed;
 }
 
-#playlister-statusbar {
+/* #playlister-statusbar {
   position:absolute;
   left: 0%;
   top: 90%;
@@ -114,7 +114,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 36pt;
-}
+} */
 
 #add-list-button {
   float:left;
