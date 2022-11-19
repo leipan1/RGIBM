@@ -47,16 +47,16 @@ deleteRecipe = async (req,res) =>{
 }
 
 getRecipeById = async (req, res) => {
-    await Playlist.findOne({ _id: req.params.id }, (err, list) => {
+    await Recipe.findOne({ _id: req.params.id }, (err, recipe) => {
         if (err) {
+            console.log("error")
             return res.status(400).json({ success: false, error: err })
         }
-
-        return res.status(200).json({ success: true, playlist: list })
+        return res.status(200).json({ success: true, recipe: recipe })
     }).catch(err => console.log(err))
 }
 getRecipes = async (req, res) => {
-    await Playlist.find({}, (err, recipes) => {
+    await Recipe.find({}, (err, recipes) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
@@ -69,11 +69,11 @@ getRecipes = async (req, res) => {
     }).catch(err => console.log(err))
 }
 getRecipePairs = async (req, res) => {
-    await Playlist.find({}, (err, playlists) => {
+    await Recipe.find({}, (err, playlists) => {
         if (err) {
             return res.status(400).json({ success: false, error: err})
         }
-        if (!playlists.length) {
+        if (!Recipe.length) {
             return res
                 .status(404)
                 .json({ success: false, error: 'Recipes not found'})
