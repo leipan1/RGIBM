@@ -2,8 +2,7 @@
     This is our back-end server, which employs some middleware
     to make sure data is received in the proper format (i.e. JSON)
     and hooks up all of our pieces.
-    
-    @author McKilla Gorilla
+
 */
 
 // THESE ARE NODE APIs WE WISH TO USE
@@ -17,8 +16,8 @@ app.use(cors())
 app.use(express.json())
 
 // SETUP OUR OWN ROUTERS AS MIDDLEWARE
-const playlistRouter = require('./routes/playlists-router')
-app.use('/api', playlistRouter)
+const recipeRouter = require('./routes/recipes-router')
+app.use('/api', recipeRouter)
 
 // INITIALIZE OUR DATABASE OBJECT
 const db = require('./db')

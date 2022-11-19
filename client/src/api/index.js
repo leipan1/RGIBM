@@ -6,8 +6,7 @@
     is a native (to browsers) standard, but Axios is easier
     to use when sending JSON back and forth and it's a Promise-
     based API which helps a lot with asynchronous communication.
-    
-    @author McKilla Gorilla
+ 
 */
 
 import axios from 'axios'
@@ -21,25 +20,28 @@ const api = axios.create({
 // WORK, AND SOME REQUIRE DATA, WHICH WE CALL THE payload, FOR WHEN
 // WE NEED TO PUT THINGS INTO THE DATABASE OR IF WE HAVE SOME
 // CUSTOM FILTERS FOR QUERIES
-export const getAllPlaylists = () => api.get(`/playlists`)
-export const getPlaylistPairs = () => api.get('playlistpairs')
-export const getPlaylistById = (id) => api.get(`/playlist/${id}`)
+export const getAllRecipes = () => api.get(`/recipes`)
+export const getRecipePairs = () => api.get('recipepairs')
+export const getRecipeById = (id) => api.get(`/recipe/${id}`)
 //~~create playlist
-export const createPlaylist= () => api.post('/playlist',{
+export const createRecipe= () => api.post('/recipe',{
     name:"Untitled",
-    songs:[]
+    time:"0",
+    imageurl:"",
+    url:"",
+    ingredients:[]
 })
 
-export const deletePlaylist = (id) => api.delete(`playlist/${id}`);
-export const editPlaylist= (id,playlist) =>api.put(`playlist/${id}`,playlist)
+export const deleteRecipe = (id) => api.delete(`recipe/${id}`);
+export const editRecipe= (id,recipe) =>api.put(`recipe/${id}`,recipe)
 
 const apis = {
-    createPlaylist,
-    deletePlaylist,
-    getAllPlaylists,
-    getPlaylistPairs,
-    getPlaylistById,
-    editPlaylist,
+    createRecipe,
+    deleteRecipe,
+    getAllRecipes,
+    getRecipePairs,
+    getRecipeById,
+    editRecipe,
 }
 
 export default apis

@@ -1,48 +1,42 @@
-const Playlist = require('../models/playlist-model')
-/*
-    This is our back-end API. It provides all the data services
-    our database needs. Note that this file contains the controller
-    functions for each endpoint.
-    
-    @author McKilla Gorilla
-*/
-createPlaylist = (req, res) => {
+const Recipe = require('../models/recipe-model')
+
+createRecipe = (req, res) => {
     const body = req.body;
-    console.log("createPlaylist body: " + body);
+    console.log("createRecipe body: " + body);
     console.log(body)
 
     if (!body) {
         return res.status(400).json({
             success: false,
-            error: 'You must provide a Playlist',
+            error: 'You must provide a Recipe',
         })
     }
 
-    const playlist = new Playlist(body);
-    console.log("playlist: " + JSON.stringify(body));
-    if (!playlist) {
+    const recipe = new Recipe(body);
+    console.log("recipe: " + JSON.stringify(body));
+    if (!recipe) {
         return res.status(400).json({ success: false, error: err })
     }
 
-    playlist
+    recipe
         .save()
         .then(() => {
             return res.status(201).json({
                 success: true,
-                playlist: playlist,
-                message: 'Playlist Created!',
+                recipe: recipe,
+                message: 'recipe Created!',
             })
         })
         .catch(error => {
             return res.status(400).json({
                 error,
-                message: 'Playlist Not Created!',
+                message: 'recipe Not Created!',
             })
         })
 }
 
-deletePlaylist = async (req,res) =>{
-    await Playlist.deleteOne({_id: req.params.id}, (err,list)=>{
+deleteRecipe = async (req,res) =>{
+    await Recipe.deleteOne({_id: req.params.id}, (err,list)=>{
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
@@ -52,7 +46,7 @@ deletePlaylist = async (req,res) =>{
     
 }
 
-getPlaylistById = async (req, res) => {
+getRecipeById = async (req, res) => {
     await Playlist.findOne({ _id: req.params.id }, (err, list) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
@@ -61,20 +55,20 @@ getPlaylistById = async (req, res) => {
         return res.status(200).json({ success: true, playlist: list })
     }).catch(err => console.log(err))
 }
-getPlaylists = async (req, res) => {
-    await Playlist.find({}, (err, playlists) => {
+getRecipes = async (req, res) => {
+    await Playlist.find({}, (err, recipes) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
-        if (!playlists.length) {
+        if (!recipes.length) {
             return res
                 .status(404)
-                .json({ success: false, error: `Playlists not found` })
+                .json({ success: false, error: `Recipes not found` })
         }
         return res.status(200).json({ success: true, data: playlists })
     }).catch(err => console.log(err))
 }
-getPlaylistPairs = async (req, res) => {
+getRecipePairs = async (req, res) => {
     await Playlist.find({}, (err, playlists) => {
         if (err) {
             return res.status(400).json({ success: false, error: err})
@@ -82,7 +76,7 @@ getPlaylistPairs = async (req, res) => {
         if (!playlists.length) {
             return res
                 .status(404)
-                .json({ success: false, error: 'Playlists not found'})
+                .json({ success: false, error: 'Recipes not found'})
         }
         else {
             // PUT ALL THE LISTS INTO ID, NAME PAIRS
@@ -100,8 +94,8 @@ getPlaylistPairs = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
-editPlaylist = async (req,res)=>{
-    console.log("edit playlist in server called!")
+editRecipe = async (req,res)=>{
+    console.log("edit recipe in server called!")
     const body=req.body
     console.log("body:")
     console.log(body)
@@ -115,10 +109,10 @@ editPlaylist = async (req,res)=>{
 }
 
 module.exports = {
-    createPlaylist,
-    deletePlaylist,
-    getPlaylists,
-    getPlaylistPairs,
-    getPlaylistById,
-    editPlaylist,
+    createRecipe,
+    deleteRecipe,
+    getRecipes,
+    getRecipePairs,
+    getRecipeById,
+    editRecipe,
 }
