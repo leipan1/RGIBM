@@ -48,7 +48,7 @@ const ListSelector = () => {
                 </div>
             })
             }
-            <input type="submit" value="Generate" onClick={handleSubmit}/>
+            <input id="submit-button" type="submit" value="Generate" onClick={handleSubmit}/>
             <RecipeModal/>
             </div>
         </div>)

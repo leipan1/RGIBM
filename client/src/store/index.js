@@ -384,7 +384,7 @@ export const useGlobalStore = () => {
             store.generateRecipeModal(chosenRecipe)
         }
         else{
-            console.log("no recipes can be generated")
+            alert("no recipes can be found")
         }
     }
 
