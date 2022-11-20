@@ -61,17 +61,16 @@ body {
   text-align: center;
 }
 
-#playlist-selector, #playlist-cards {
+#recipe-selector {
   overflow: scroll;
   grid-column: 1 / 3;
   grid-row: 2 / 3;
-  /* display:grid; */
   background-color: var(--swatch-primary);
   height:80%;
 }
 
 
-#playlist-selector-heading{
+#recipe-selector-heading{
   font-size: xx-large;
   font-weight:bold;
   display: flex;

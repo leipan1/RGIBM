@@ -11,7 +11,6 @@ const ListSelector = () => {
     store.history = useHistory();
 
 
-    
 
     const handleSubmit=(event)=>{
         store.filterRecipes()
@@ -29,9 +28,8 @@ const ListSelector = () => {
     }
     
     return (
-        <div id="playlist-selector">
-            <div id="list-selector-list">
-            <div id="playlist-selector-heading">
+        <div id="recipe-selector">
+            <div id="recipe-selector-heading">
                 Filter
             </div>
             {
@@ -50,7 +48,6 @@ const ListSelector = () => {
             }
             <input id="submit-button" type="submit" value="Generate" onClick={handleSubmit}/>
             <RecipeModal/>
-            </div>
         </div>)
 }
 
