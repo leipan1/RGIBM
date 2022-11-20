@@ -1,5 +1,6 @@
 import { createContext, useState } from 'react'
 import api from '../api'
+import ingredientsApi from '../ingredients-api'
 
 
 export const GlobalStoreContext = createContext({});
@@ -15,6 +16,7 @@ export const GlobalStoreActionType = {
     RANDONMIZE_RECIPE: "RANDONMIZE_RECIPE",
     UPDATE_CHECKED_INGREDIENTS: "UPDATE_CHECKED_INGREDIENT",
     GENERATE_RECIPES:"GENERATE_RECIPES",
+    INGREDIENTS_LIST:"INGREDIENTS_LIST",
 }
 
 
@@ -29,6 +31,7 @@ export const useGlobalStore = () => {
         showModal: false,
         filteredRecipes:[],
         chosenRecipe:null,
+        // ingredientsList:[]
     });
 
 
@@ -42,7 +45,8 @@ export const useGlobalStore = () => {
                     checkedIngredients:store.checkedIngredients,
                     showModal: store.showModal,
                     filteredRecipes:store.acceptableRecipe,
-                    chosenRecipe:payload
+                    chosenRecipe:payload,
+                    // ingredientsList:store.ingredientsList
                 })
             }
             case GlobalStoreActionType.UPDATE_CHECKED_INGREDIENT:{
@@ -50,7 +54,8 @@ export const useGlobalStore = () => {
                     checkedIngredients:payload,
                     showModal: store.showModal,
                     filteredRecipes:store.acceptableRecipe,
-                    chosenRecipe:store.chosenRecipe
+                    chosenRecipe:store.chosenRecipe,
+                    // ingredientsList:store.ingredientsList
                 })
             }
             case GlobalStoreActionType.GENERATE_RECIPES:{
@@ -58,22 +63,49 @@ export const useGlobalStore = () => {
                     checkedIngredients:store.checkedIngredients,
                     showModal:store.showModal,
                     filteredRecipes:payload,
-                    chosenRecipe:store.chosenRecipe
+                    chosenRecipe:store.chosenRecipe,
+                    // ingredientsList:store.ingredientsList
                 })
             }
+            // case GlobalStoreActionType.INGREDIENTS_LIST:{
+            //     return setStore({
+            //         checkedIngredients:store.checkedIngredients,
+            //         showModal:store.showModal,
+            //         filteredRecipes:store.filteredRecipes,
+            //         chosenRecipe:store.chosenRecipe,
+            //         ingredientsList:payload
+            //     })
+            // }
             default:
                 return store;
         }
     }
 
+    // store.loadIngredientsName=function(){
+    //     async function asyncLoadIngredientsPair(){
+    //         const response=await ingredientsApi.getAllIngredients();
+    //         if(response.data.success){
+    //             let ingredientsList=response.data.data
+    //             let temp=store.ingredientsList
+    //             for(let i=0;i<ingredientsList.length;i++){
+    //                 temp.push(ingredientsList[i].ingredients)
+    //             }
+    //             storeReducer({
+    //                 type:GlobalStoreActionType.INGREDIENTS_LIST,
+    //                 payload:temp
+    //             })
+    //         }
+    //     }asyncLoadIngredientsPair()
+    // }
+
     //update state for when an ingredient is checked
     store.setCheckedIngredients=function(ingredient){
         let currentList=store.checkedIngredients
         currentList.push(ingredient)
-        storeReducer({
-            type:GlobalStoreActionType.UPDATE_CHECKED_INGREDIENTS,
-            payload:currentList
-        })
+        // storeReducer({
+        //     type:GlobalStoreActionType.UPDATE_CHECKED_INGREDIENTS,
+        //     payload:currentList
+        // })
     }
 
     //update state for when an ingredient is unchecked
@@ -84,10 +116,10 @@ export const useGlobalStore = () => {
                 currentList.splice(i,1)
             }
         }
-        storeReducer({
-            type:GlobalStoreActionType.UPDATE_CHECKED_INGREDIENT,
-            payload:currentList
-        })
+        // storeReducer({
+        //     type:GlobalStoreActionType.UPDATE_CHECKED_INGREDIENT,
+        //     payload:currentList
+        // })
     }
 
     //filter through database for possible recipes and updates the state
@@ -95,8 +127,6 @@ export const useGlobalStore = () => {
         async function asyncGetRecipes(){
             let response=await api.getAllRecipes()
             let tempList=store.filteredRecipes
-            // console.log("TEMP LIST:::")
-            // console.log(tempList)
             if(response.data.success){
                 for(let i=0;i<response.data.data.length;i++){
                     let recipe=response.data.data[i].ingredients
@@ -107,10 +137,14 @@ export const useGlobalStore = () => {
                         tempList.push(response.data.data[i]._id)
                     }
                 }
-                storeReducer({
-                    type:GlobalStoreActionType.GENERATE_RECIPES,
-                    payload:tempList
-                })
+                // console.log("FILTERED RECIPE BEFORE:")
+                // console.log(store.filteredRecipes)
+                // storeReducer({
+                //     type:GlobalStoreActionType.GENERATE_RECIPES,
+                //     payload:tempList
+                // })
+                // console.log("FILTERED RECIPE:")
+                // console.log(store.filteredRecipes)
 
                 //checks if there are matching recipes, if not, alerts the user
                 let size=store.filteredRecipes.length
@@ -163,12 +197,12 @@ export const useGlobalStore = () => {
     store.hideRecipeModal=function(){
         let modal=document.getElementById("recipe-modal");
         modal.classList.remove("is-visible");
-        let emptyList=[]
-        storeReducer({
-            type:GlobalStoreActionType.GENERATE_RECIPES,
-            payload:emptyList
-        })
-        // console.log("cleared acceptable recipes")
+        // let emptyList=[]
+        // storeReducer({
+        //     type:GlobalStoreActionType.GENERATE_RECIPES,
+        //     payload:emptyList
+        // })
+        store.filteredRecipes=[]
         store.showModal=false
     }
 

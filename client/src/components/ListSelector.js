@@ -11,7 +11,6 @@ const ListSelector = () => {
     store.history = useHistory();
 
 
-
     const handleSubmit=(event)=>{
         store.filterRecipes()
     }
@@ -28,27 +27,33 @@ const ListSelector = () => {
     }
     
     return (
-        <div id="recipe-selector">
-            <div id="recipe-selector-heading">
-                Filter
+        <div id="selector">
+            <div id="recipe-list">
+                PUT RECIPES HERE
             </div>
-            {
-            Ingredients.map((val,key)=>{
-                return <div className="ingredients" key={key}>
-                    <p><input
-                        type="checkbox"
-                        name="ingredients"
-                        value={val.ingredients}
-                        onChange={handleCheckbox}
-                    />
-                    <label>{val.ingredients}</label>
-                    </p>
+            <div id="recipe-selector">
+                <div id="recipe-selector-heading">
+                    Filter
                 </div>
-            })
-            }
+                {
+                Ingredients.map((val,key)=>{
+                    return <div className="ingredients" key={key}>
+                        <p><input
+                            type="checkbox"
+                            name="ingredients"
+                            value={val.ingredients}
+                            onChange={handleCheckbox}
+                        />
+                        <label>{val.ingredients}</label>
+                        </p>
+                    </div>
+                })
+                }
+            </div>
             <input id="submit-button" type="submit" value="Generate" onClick={handleSubmit}/>
             <RecipeModal/>
-        </div>)
+        </div>
+        )
 }
 
 export default ListSelector;
