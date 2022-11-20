@@ -12,9 +12,9 @@ export const GlobalStoreContext = createContext({});
 // THESE ARE ALL THE TYPES OF UPDATES TO OUR GLOBAL
 // DATA STORE STATE THAT CAN BE PROCESSED
 export const GlobalStoreActionType = {
-    SET_CHECKED_INGREDIENTS:"SET_CHECKED_INGREDIENTS",
-    GENERATE_RECIPE: "GENERATE_RECIPE",
-    FIND_RECIPE: "FIND_RECIPE",
+    RANDONMIZE_RECIPE: "RANDONMIZE_RECIPE",
+    UPDATE_CHECKED_INGREDIENTS: "UPDATE_CHECKED_INGREDIENT",
+    GENERATE_RECIPES:"GENERATE_RECIPES",
 }
 
 
@@ -26,8 +26,8 @@ export const useGlobalStore = () => {
 
     const [store, setStore] = useState({
         checkedIngredients:[],
-        generateRecipe: false,
-        acceptableRecipe:[],
+        showModal: false,
+        filteredRecipes:[],
         chosenRecipe:null,
     });
 
@@ -37,27 +37,27 @@ export const useGlobalStore = () => {
     const storeReducer = (action) => {
         const { type, payload } = action;
         switch (type) {
-            case GlobalStoreActionType.SET_CHECKED_INGREDIENTS:{
-                return setStore({
-                    checkedIngredients:payload,
-                    generateRecipe: store.generateRecipe,
-                    acceptableRecipe:store.acceptableRecipe,
-                    chosenRecipe:store.chosenRecipe
-                })
-            }
-            case GlobalStoreActionType.GENERATE_RECIPE:{
+            case GlobalStoreActionType.RANDONMIZE_RECIPE:{
                 return setStore({
                     checkedIngredients:store.checkedIngredients,
-                    generateRecipe: store.generateRecipe,
-                    acceptableRecipe:store.acceptableRecipe,
+                    showModal: store.showModal,
+                    filteredRecipes:store.acceptableRecipe,
                     chosenRecipe:payload
                 })
             }
-            case GlobalStoreActionType.ACCETABLE_RECIPE:{
+            case GlobalStoreActionType.UPDATE_CHECKED_INGREDIENT:{
+                return setStore({
+                    checkedIngredients:payload,
+                    showModal: store.showModal,
+                    filteredRecipes:store.acceptableRecipe,
+                    chosenRecipe:store.chosenRecipe
+                })
+            }
+            case GlobalStoreActionType.GENERATE_RECIPES:{
                 return setStore({
                     checkedIngredients:store.checkedIngredients,
-                    generateRecipe: store.generateRecipe,
-                    acceptableRecipe:payload,
+                    showModal:store.showModal,
+                    filteredRecipes:payload,
                     chosenRecipe:store.chosenRecipe
                 })
             }
@@ -65,52 +65,38 @@ export const useGlobalStore = () => {
                 return store;
         }
     }
-    store.setCheckedIngredients=function(ingredient){
-        store.checkedIngredients.push(ingredient)
-        console.log("checked ingredients:"+store.checkedIngredients);
 
+    //update state for when an ingredient is checked
+    store.setCheckedIngredients=function(ingredient){
+        let currentList=store.checkedIngredients
+        currentList.push(ingredient)
+        storeReducer({
+            type:GlobalStoreActionType.UPDATE_CHECKED_INGREDIENTS,
+            payload:currentList
+        })
     }
 
+    //update state for when an ingredient is unchecked
     store.uncheckIngredients=function(ingredient){
-        for(let i=0;i<store.checkedIngredients.length;i++){
-            if(ingredient === store.checkedIngredients[i]){
-                store.checkedIngredients.splice(i,1)
+        let currentList=store.checkedIngredients
+        for(let i=0;i<currentList.length;i++){
+            if(ingredient === currentList[i]){
+                currentList.splice(i,1)
             }
         }
-        console.log("checked ingredients:"+store.checkedIngredients);
+        storeReducer({
+            type:GlobalStoreActionType.UPDATE_CHECKED_INGREDIENT,
+            payload:currentList
+        })
     }
 
-    store.generateRecipeModal=function(id){
-        async function asyncGetRecipe(id){
-            let response= await api.getRecipeById(id)
-            if (response.data.success){
-                let recipeInfo=response.data.recipe
-                storeReducer({
-                    type:GlobalStoreActionType.GENERATE_RECIPE,
-                    payload:recipeInfo
-                })
-            }
-        }asyncGetRecipe(id)
-        store.showRecipeModal()
-    }
-
-    store.showRecipeModal=function(){
-        store.generateRecipe=true
-        let modal=document.getElementById("recipe-modal");
-        modal.classList.add("is-visible")
-    }
-    store.hideRecipeModal=function(){
-        let modal=document.getElementById("recipe-modal");
-        modal.classList.remove("is-visible");
-        store.generateRecipe=null
-        store.acceptableRecipe=[]
-        console.log("cleared acceptable recipes")
-        console.log(store.acceptableRecipe)
-    }
-
+    //filter through database for possible recipes and updates the state
     store.filterRecipes=function(){
         async function asyncGetRecipes(){
             let response=await api.getAllRecipes()
+            let tempList=store.filteredRecipes
+            // console.log("TEMP LIST:::")
+            // console.log(tempList)
             if(response.data.success){
                 for(let i=0;i<response.data.data.length;i++){
                     let recipe=response.data.data[i].ingredients
@@ -118,30 +104,74 @@ export const useGlobalStore = () => {
                 
                     const match=recipe.every(val=>ingre.includes(val))
                     if(match){
-                        store.acceptableRecipe.push(response.data.data[i]._id)
+                        tempList.push(response.data.data[i]._id)
                     }
                 }
+                storeReducer({
+                    type:GlobalStoreActionType.GENERATE_RECIPES,
+                    payload:tempList
+                })
+
+                //checks if there are matching recipes, if not, alerts the user
+                let size=store.filteredRecipes.length
+                if(size){
+                    randomlySelectRecipe(size)
+                }
+                else{
+                    alert("no recipes can be found")
+                }
             }
-            randomlySelectRecipe()
         }asyncGetRecipes()
     }
 
-    function randomlySelectRecipe(){
-        let size=store.acceptableRecipe.length
-        console.log("# of possible recipe(s):"+store.acceptableRecipe.length)
-        if(size){
-            //console.log("the random recipe being chosen is:"+ store.acceptableRecipe[getRandomInt(size)])
-            let chosenRecipe=store.acceptableRecipe[getRandomInt(size)]
-            store.generateRecipeModal(chosenRecipe)
-        }
-        else{
-            alert("no recipes can be found")
-        }
+    //randomly selects a recipe from filtered list 
+    function randomlySelectRecipe(size){
+        // console.log("# of possible recipe(s):"+size)
+        // console.log(store.filteredRecipes)
+        let chosenRecipe=store.filteredRecipes[getRandomInt(size)]
+        store.markRecipeForModal(chosenRecipe)
     }
 
+    //random generator from [0-max)
     function getRandomInt(max){
         return Math.floor(Math.random()*max);
     }
+
+    //marks a specific recipe ready to show in modal
+    store.markRecipeForModal=function(id){
+        async function asyncGetRecipe(id){
+            let response= await api.getRecipeById(id)
+            if (response.data.success){
+                let recipeInfo=response.data.recipe
+                storeReducer({
+                    type:GlobalStoreActionType.RANDONMIZE_RECIPE,
+                    payload:recipeInfo
+                })
+            }
+        }asyncGetRecipe(id)
+        store.showRecipeModal()
+    }
+
+    //function to make modal visible
+    store.showRecipeModal=function(){
+        store.showModal=true
+        let modal=document.getElementById("recipe-modal");
+        modal.classList.add("is-visible")
+    }
+
+    //function to make modal invisible
+    store.hideRecipeModal=function(){
+        let modal=document.getElementById("recipe-modal");
+        modal.classList.remove("is-visible");
+        let emptyList=[]
+        storeReducer({
+            type:GlobalStoreActionType.GENERATE_RECIPES,
+            payload:emptyList
+        })
+        // console.log("cleared acceptable recipes")
+        store.showModal=false
+    }
+
 
 
 
