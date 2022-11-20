@@ -1,4 +1,4 @@
-import { createContext, startTransition, useState } from 'react'
+import { createContext, useState } from 'react'
 import api from '../api'
 
 
@@ -7,7 +7,6 @@ export const GlobalStoreContext = createContext({});
     This is our global data store. Note that it uses the Flux design pattern,
     which makes use of things like actions and reducers. 
 
-    @author Leipan
 */
 
 // THESE ARE ALL THE TYPES OF UPDATES TO OUR GLOBAL

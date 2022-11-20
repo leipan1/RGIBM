@@ -21,27 +21,11 @@ const api = axios.create({
 // WE NEED TO PUT THINGS INTO THE DATABASE OR IF WE HAVE SOME
 // CUSTOM FILTERS FOR QUERIES
 export const getAllRecipes = () => api.get(`/recipes`)
-export const getRecipePairs = () => api.get('recipepairs')
 export const getRecipeById = (id) => api.get(`/recipe/${id}`)
-//~~create playlist
-export const createRecipe= () => api.post('/recipe',{
-    name:"Untitled",
-    time:"0",
-    imageurl:"",
-    url:"",
-    ingredients:[]
-})
-
-export const deleteRecipe = (id) => api.delete(`recipe/${id}`);
-export const editRecipe= (id,recipe) =>api.put(`recipe/${id}`,recipe)
 
 const apis = {
-    createRecipe,
-    deleteRecipe,
     getAllRecipes,
-    getRecipePairs,
     getRecipeById,
-    editRecipe,
 }
 
 export default apis
