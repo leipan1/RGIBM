@@ -170,21 +170,19 @@ input {
 
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 400px;
+  height: auto;
+  top: 20%;
+  left: 50%;
+  margin-top: -100px; 
+  margin-left: -250px; 
   padding: 1rem;
-  background: var(--black);
+  background: white;
   color: var(--swatch-text);
   cursor: pointer;
-  visibility: hidden;
   opacity: 0;
   transition: all 0.35s ease-in;
-  font-family: var(--font-primary);
+  visibility: hidden;
 }
 
 .modal.is-visible {
@@ -192,7 +190,7 @@ input {
   opacity: 1;
 }
 
-.modal-dialog {
+/* .modal-dialog {
   position: relative;
   max-width: 800px;
   max-height: 80vh;
@@ -245,7 +243,6 @@ input {
 
 .modal-control {
   cursor: pointer;
-  /* width: 20%; */
 }
 
 .modal-button{
@@ -263,7 +260,43 @@ input {
 
 #confirm-cancel-container {
   text-align:center;
+} */
+
+#recipe-modal{
+  display: flex;
+  /* flex-wrap: wrap; */
+  flex-direction: column;
+  border: none;
+  margin: none;
+  padding: none;
+  height: 70%;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
+
+.recipe-image{
+  height: 80%;
+  width: 100%;
+}
+
+.recipe-name{
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 100px; 
+  font-weight: bold; 
+  font-size: 25px;
+}
+
+.close-modal{
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 200px; 
+  font-weight: bold; 
+  font-size: 25px;
+
+}
+
+
+
 
 
 
@@ -271,7 +304,7 @@ input {
 
 /* ANIMATIONS
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-[data-animation] .modal-dialog {
+/* [data-animation] .modal-dialog {
   opacity: 0;
   transition: all 0.5s var(--bounceEasing);
 }
@@ -363,4 +396,4 @@ input {
   100% {
     transform: rotate(0deg);
   }
-}
+} */

@@ -25,6 +25,7 @@ export const GlobalStoreActionType = {
     MARK_SONG_FOR_EDIT: "MARK_SONG_FOR_EDIT",
     SET_CHECKED_INGREDIENTS:"SET_CHECKED_INGREDIENTS",
     GENERATE_RECIPE: "GENERATE_RECIPE",
+    FIND_RECIPE: "FIND_RECIPE",
 }
 
 
@@ -47,6 +48,8 @@ export const useGlobalStore = () => {
         canRedo: false,
         checkedIngredients:[],
         generateRecipe: false,
+        acceptableRecipe:[],
+        chosenRecipe:null,
     });
 
 
@@ -66,7 +69,9 @@ export const useGlobalStore = () => {
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
                     checkedIngredients:store.checkedIngredients,
-                    generateRecipe: store.generateRecipe
+                    generateRecipe: store.generateRecipe,
+                    acceptableRecipe:store.acceptableRecipe,
+                    chosenRecipe:store.chosenRecipe
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -80,7 +85,9 @@ export const useGlobalStore = () => {
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
                     checkedIngredients:store.checkedIngredients,
-                    generateRecipe: store.generateRecipe
+                    generateRecipe: store.generateRecipe,
+                    acceptableRecipe:store.acceptableRecipe,
+                    chosenRecipe:store.chosenRecipe
                 })
             }
             // CREATE A NEW LIST
@@ -94,7 +101,9 @@ export const useGlobalStore = () => {
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
                     checkedIngredients:store.checkedIngredients,
-                    generateRecipe: store.generateRecipe
+                    generateRecipe: store.generateRecipe,
+                    acceptableRecipe:store.acceptableRecipe,
+                    chosenRecipe:store.chosenRecipe
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -108,7 +117,9 @@ export const useGlobalStore = () => {
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
                     checkedIngredients:store.checkedIngredients,
-                    generateRecipe: store.generateRecipe
+                    generateRecipe: store.generateRecipe,
+                    acceptableRecipe:store.acceptableRecipe,
+                    chosenRecipe:store.chosenRecipe
                 });
             }
             case GlobalStoreActionType.SET_CHECKED_INGREDIENTS:{
@@ -121,7 +132,9 @@ export const useGlobalStore = () => {
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
                     checkedIngredients:payload,
-                    generateRecipe: store.generateRecipe
+                    generateRecipe: store.generateRecipe,
+                    acceptableRecipe:store.acceptableRecipe,
+                    chosenRecipe:store.chosenRecipe
                 })
             }
             // PREPARE TO DELETE A LIST
@@ -135,7 +148,9 @@ export const useGlobalStore = () => {
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
                     checkedIngredients:store.checkedIngredients,
-                    generateRecipe: store.generateRecipe
+                    generateRecipe: store.generateRecipe,
+                    acceptableRecipe:store.acceptableRecipe,
+                    chosenRecipe:store.chosenRecipe
                 });
             }
             case GlobalStoreActionType.MARK_SONG_FOR_DELETION:{
@@ -148,7 +163,9 @@ export const useGlobalStore = () => {
                     markForDeletionSong:payload,
                     markForEdit: store.markForEdit,
                     checkedIngredients:store.checkedIngredients,
-                    generateRecipe: store.generateRecipe
+                    generateRecipe: store.generateRecipe,
+                    acceptableRecipe:store.acceptableRecipe,
+                    chosenRecipe:store.chosenRecipe
                 })
             }
             case GlobalStoreActionType.MARK_SONG_FOR_EDIT:{
@@ -161,7 +178,9 @@ export const useGlobalStore = () => {
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit:payload,
                     checkedIngredients:store.checkedIngredients,
-                    generateRecipe: store.generateRecipe
+                    generateRecipe: store.generateRecipe,
+                    acceptableRecipe:store.acceptableRecipe,
+                    chosenRecipe:store.chosenRecipe
                 })
             }
             // UPDATE A LIST
@@ -175,7 +194,9 @@ export const useGlobalStore = () => {
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
                     checkedIngredients:store.checkedIngredients,
-                    generateRecipe: store.generateRecipe
+                    generateRecipe: store.generateRecipe,
+                    acceptableRecipe:store.acceptableRecipe,
+                    chosenRecipe:store.chosenRecipe
                 });
             }
             // START EDITING A LIST NAME
@@ -189,7 +210,9 @@ export const useGlobalStore = () => {
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
                     checkedIngredients:store.checkedIngredients,
-                    generateRecipe: store.generateRecipe
+                    generateRecipe: store.generateRecipe,
+                    acceptableRecipe:store.acceptableRecipe,
+                    chosenRecipe:store.chosenRecipe
                 });
             }
             case GlobalStoreActionType.GENERATE_RECIPE:{
@@ -202,7 +225,24 @@ export const useGlobalStore = () => {
                     markForDeletionSong:store.markForDeletionSong,
                     markForEdit: store.markForEdit,
                     checkedIngredients:store.checkedIngredients,
-                    generateRecipe: payload
+                    generateRecipe: store.generateRecipe,
+                    acceptableRecipe:store.acceptableRecipe,
+                    chosenRecipe:payload
+                })
+            }
+            case GlobalStoreActionType.ACCETABLE_RECIPE:{
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    markForDeletion: store.markForDeletion,
+                    markForDeletionSong:store.markForDeletionSong,
+                    markForEdit: store.markForEdit,
+                    checkedIngredients:store.checkedIngredients,
+                    generateRecipe: store.generateRecipe,
+                    acceptableRecipe:payload,
+                    chosenRecipe:store.chosenRecipe
                 })
             }
             default:
@@ -300,7 +340,56 @@ export const useGlobalStore = () => {
                 })
             }
         }asyncGetRecipe(id)
+        store.showRecipeModal()
+    }
 
+    store.showRecipeModal=function(){
+        store.generateRecipe=true
+        let modal=document.getElementById("recipe-modal");
+        modal.classList.add("is-visible")
+    }
+    store.hideRecipeModal=function(){
+        let modal=document.getElementById("recipe-modal");
+        modal.classList.remove("is-visible");
+        store.generateRecipe=null
+        store.acceptableRecipe=[]
+        console.log("cleared acceptable recipes")
+        console.log(store.acceptableRecipe)
+    }
+
+    store.filterRecipes=function(){
+        async function asyncGetRecipes(){
+            let response=await api.getAllRecipes()
+            if(response.data.success){
+                for(let i=0;i<response.data.data.length;i++){
+                    let recipe=response.data.data[i].ingredients
+                    let ingre=store.checkedIngredients
+                
+                    const match=recipe.every(val=>ingre.includes(val))
+                    if(match){
+                        store.acceptableRecipe.push(response.data.data[i]._id)
+                    }
+                }
+            }
+            randomlySelectRecipe()
+        }asyncGetRecipes()
+    }
+
+    function randomlySelectRecipe(){
+        let size=store.acceptableRecipe.length
+        console.log("# of possible recipe(s):"+store.acceptableRecipe.length)
+        if(size){
+            //console.log("the random recipe being chosen is:"+ store.acceptableRecipe[getRandomInt(size)])
+            let chosenRecipe=store.acceptableRecipe[getRandomInt(size)]
+            store.generateRecipeModal(chosenRecipe)
+        }
+        else{
+            console.log("no recipes can be generated")
+        }
+    }
+
+    function getRandomInt(max){
+        return Math.floor(Math.random()*max);
     }
 
 

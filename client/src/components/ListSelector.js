@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { GlobalStoreContext } from '../store'
 import Ingredients from './Ingredients.json'
+import RecipeModal from './RecipeModal'
 
 
 
@@ -13,8 +14,7 @@ const ListSelector = () => {
     
 
     const handleSubmit=(event)=>{
-        let id="6378edaf4767837c1ab53a55"
-        store.generateRecipeModal(id)
+        store.filterRecipes()
     }
 
     const handleCheckbox=(event)=>{
@@ -49,7 +49,7 @@ const ListSelector = () => {
             })
             }
             <input type="submit" value="Generate" onClick={handleSubmit}/>
-
+            <RecipeModal/>
             </div>
         </div>)
 }
