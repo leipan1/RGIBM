@@ -9,8 +9,7 @@ export const GlobalStoreContext = createContext({});
 
 */
 
-// THESE ARE ALL THE TYPES OF UPDATES TO OUR GLOBAL
-// DATA STORE STATE THAT CAN BE PROCESSED
+//types of updates to the global data store
 export const GlobalStoreActionType = {
     RANDONMIZE_RECIPE: "RANDONMIZE_RECIPE",
     UPDATE_CHECKED_INGREDIENTS: "UPDATE_CHECKED_INGREDIENT",
@@ -21,11 +20,10 @@ export const GlobalStoreActionType = {
 
 
 
-// WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
-// AVAILABLE TO THE REST OF THE APPLICATION
+//making global data store available to rest of the application
 export const useGlobalStore = () => {
-    // THESE ARE ALL THE THINGS OUR DATA STORE WILL MANAGE
-
+    
+    //store states
     const [store, setStore] = useState({
         checkedIngredients:[],
         showModal: false,
@@ -35,8 +33,7 @@ export const useGlobalStore = () => {
     });
 
 
-    // HERE'S THE DATA STORE'S REDUCER, IT MUST
-    // HANDLE EVERY TYPE OF STATE CHANGE
+    //reducers that handle state changes
     const storeReducer = (action) => {
         const { type, payload } = action;
         switch (type) {
@@ -81,6 +78,7 @@ export const useGlobalStore = () => {
         }
     }
 
+    //retrieves and loads all the recipes 
     store.loadRecipes=function(){
         async function asyncLoadRecipes(){
             const response=await api.getAllRecipes();
@@ -119,12 +117,16 @@ export const useGlobalStore = () => {
     //filter through database for possible recipes and updates the state
     store.filterRecipes=function(){
         store.filteredRecipes=[]
+
         async function asyncGetRecipes(){
             let response=await api.getAllRecipes()
+
             let tempList=store.filteredRecipes
             let tempListForCard=[]
-            
+        
             if(response.data.success){
+                //goes through every retrieved recipes and check
+                //for matches
                 for(let i=0;i<response.data.data.length;i++){
                     let recipe=response.data.data[i].ingredients
                     let ingre=store.checkedIngredients
@@ -140,13 +142,13 @@ export const useGlobalStore = () => {
                     type:GlobalStoreActionType.LOAD_RECIPES,
                     payload:tempListForCard
                 })
+                //refreshes the page
                 store.history.push("/")
 
                 let size=store.filteredRecipes.length
                 console.log("FILTERED RECIPE SIZE:"+size)
                 if(size===0){
                     alert("no recipes can be found")
-                    // randomlySelectRecipe(size)
                 }
             }
         }asyncGetRecipes()
@@ -193,8 +195,6 @@ export const useGlobalStore = () => {
         console.log(store.filteredRecipes)
         store.showModal=false
     }
-
-
 
     return { store, storeReducer };
 }

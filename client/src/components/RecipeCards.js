@@ -2,6 +2,10 @@ import { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { GlobalStoreContext } from '../store'
 
+/*
+    this is a card in the list of generated recipes
+*/
+
 function RecipeCards(props){
 
     const { store } = useContext(GlobalStoreContext);

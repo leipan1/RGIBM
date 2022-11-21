@@ -1,18 +1,25 @@
 import React, { Component, useContext } from 'react';
 import { GlobalStoreContext } from '../store'
 
+/*
+    This is the modal that pops up when the "RANDOMNIZE" button is clicked
+*/
+
 function RecipeModal(){
     const {store} = useContext(GlobalStoreContext);
     console.log("generate recipe modal?"+store.showModal)
     let name=""
     let imageurl=""
     let url=""
+
+    //populates variable with relavent information once a recipe has been randomly chosen
     if(store.showModal){
         name=store.chosenRecipe.name
         imageurl=store.chosenRecipe.imageurl
         url=store.chosenRecipe.url
     }
 
+    //called when user clicks on the "CLOSE" button on the modal
     function handleCloseModal(){
         store.hideRecipeModal()
     }

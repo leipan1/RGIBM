@@ -1,6 +1,6 @@
 /*
-    This is where we'll route all of the received http requests
-    into controller response functions.
+    This is where all received http requests will be routed into the controller
+    functions
 
 */
 const express = require('express')

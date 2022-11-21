@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 /*
-    This initializes the connection to our database so that we can do CRUD.
+    This initializes the connection to our database.
 
 */
 mongoose

@@ -1,3 +1,7 @@
+
+/*
+    specifying the format of the data that will be put into the DB
+*/
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 

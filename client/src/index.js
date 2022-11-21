@@ -3,9 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 /*
-  This is the entry-point for our application. Notice that we
-  inject our store into all the components in our application.
-
+  This is the entry-point for the application.
 */
 import { GlobalStoreContext, useGlobalStore } from './store'
 const AppWrapper = () => {

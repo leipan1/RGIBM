@@ -1,6 +1,9 @@
 const Recipe = require('../models/recipe-model')
 
-
+/*
+    this is the back-end API. Provides all the data services the
+    database needs. Contains controller function for each endpoint 
+*/
 getRecipeById = async (req, res) => {
     await Recipe.findOne({ _id: req.params.id }, (err, recipe) => {
         if (err) {

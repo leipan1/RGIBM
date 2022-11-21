@@ -1,5 +1,7 @@
 
-
+/*
+    This is the banner of the application
+*/
 function Banner(props) {
     return (        
         <div id="recipe-banner">

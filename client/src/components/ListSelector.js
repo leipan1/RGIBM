@@ -5,19 +5,22 @@ import Ingredients from './Ingredients.json'
 import RecipeModal from './RecipeModal'
 import RecipeCards from './RecipeCards'
 
-
-
+/*
+    The UI for the main section of the application. This is user interaction with the application
+    is defined
+*/
 
 const ListSelector = () => {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
 
+    //loads all recipes upon startup of application
     useEffect(() => {
         store.loadRecipes();
         console.log("LOADING RECIPES NOW!")
     }, []);
 
-    //add props
+    //adding props to the recipe card after all the recipes have been loaded/generated
     let recipeCard="";
     if(store){
         if(store.recipes){
@@ -29,10 +32,14 @@ const ListSelector = () => {
         }
     }
 
+    //called when user clicks on the "GENERATE" button
     const handleSubmit=(event)=>{
         store.filterRecipes()
     }
 
+
+    //called when user clicks on an ingredient checkbox. Checks if the 
+    //ingredient is checked or unchecked
     const handleCheckbox=(event)=>{
         if(event.target.checked){
             //console.log(event.target.value+" is checked")
@@ -44,6 +51,8 @@ const ListSelector = () => {
         }
     }
 
+    //called when user clicks on "RANDOMNIZE" button
+    //checks to make sure there are recipes to choose from
     const handleChooseRecipe=(event)=>{
         if(store.filteredRecipes.length>0){
             store.randomlySelectRecipe(store.filteredRecipes.length)

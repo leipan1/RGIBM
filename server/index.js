@@ -1,29 +1,28 @@
 /*
-    This is our back-end server, which employs some middleware
-    to make sure data is received in the proper format (i.e. JSON)
-    and hooks up all of our pieces.
+    the back-end server where some middleware will make sure data recieved is
+    in JSON format.
 
 */
 
-// THESE ARE NODE APIs WE WISH TO USE
+//API
 const express = require('express')
 const cors = require('cors')
 
-// CREATE OUR SERVER
+//creating the server
 const app = express()
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.use(express.json())
 
-// SETUP OUR OWN ROUTERS AS MIDDLEWARE
+//setup of router as middleware
 const recipeRouter = require('./routes/recipes-router')
 app.use('/api', recipeRouter)
 
 
-// INITIALIZE OUR DATABASE OBJECT
+//initializing DB object
 const db = require('./db')
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
-// PUT THE SERVER IN LISTENING MODE
+//put server in listening mode
 const apiPort = 4000
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
