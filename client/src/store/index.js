@@ -1,6 +1,5 @@
 import { createContext, useState } from 'react'
 import api from '../api'
-import ingredientsApi from '../ingredients-api'
 
 
 export const GlobalStoreContext = createContext({});
@@ -33,7 +32,6 @@ export const useGlobalStore = () => {
         filteredRecipes:[],
         chosenRecipe:null,
         recipes:[]
-        // ingredientsList:[]
     });
 
 
@@ -49,7 +47,6 @@ export const useGlobalStore = () => {
                     filteredRecipes:store.acceptableRecipe,
                     chosenRecipe:payload,
                     recipes:store.recipes
-                    // ingredientsList:store.ingredientsList
                 })
             }
             case GlobalStoreActionType.UPDATE_CHECKED_INGREDIENT:{
@@ -59,7 +56,6 @@ export const useGlobalStore = () => {
                     filteredRecipes:store.acceptableRecipe,
                     chosenRecipe:store.chosenRecipe,
                     recipes:store.recipes
-                    // ingredientsList:store.ingredientsList
                 })
             }
             case GlobalStoreActionType.GENERATE_RECIPES:{
@@ -69,7 +65,6 @@ export const useGlobalStore = () => {
                     filteredRecipes:payload,
                     chosenRecipe:store.chosenRecipe,
                     recipes:store.recipes
-                    // ingredientsList:store.ingredientsList
                 })
             }
             case GlobalStoreActionType.LOAD_RECIPES:{
@@ -79,21 +74,8 @@ export const useGlobalStore = () => {
                     filteredRecipes:store.filteredRecipes,
                     chosenRecipe:store.chosenRecipe,
                     recipes:payload
-                    // ingredientsList:store.ingredientsList
                 })
             }
-            
-            
-            
-            // case GlobalStoreActionType.INGREDIENTS_LIST:{
-            //     return setStore({
-            //         checkedIngredients:store.checkedIngredients,
-            //         showModal:store.showModal,
-            //         filteredRecipes:store.filteredRecipes,
-            //         chosenRecipe:store.chosenRecipe,
-            //         ingredientsList:payload
-            //     })
-            // }
             default:
                 return store;
         }
@@ -116,31 +98,12 @@ export const useGlobalStore = () => {
         }asyncLoadRecipes()
     }
 
-    // store.loadIngredientsName=function(){
-    //     async function asyncLoadIngredientsPair(){
-    //         const response=await ingredientsApi.getAllIngredients();
-    //         if(response.data.success){
-    //             let ingredientsList=response.data.data
-    //             let temp=store.ingredientsList
-    //             for(let i=0;i<ingredientsList.length;i++){
-    //                 temp.push(ingredientsList[i].ingredients)
-    //             }
-    //             storeReducer({
-    //                 type:GlobalStoreActionType.INGREDIENTS_LIST,
-    //                 payload:temp
-    //             })
-    //         }
-    //     }asyncLoadIngredientsPair()
-    // }
+
 
     //update state for when an ingredient is checked
     store.setCheckedIngredients=function(ingredient){
         let currentList=store.checkedIngredients
         currentList.push(ingredient)
-        // storeReducer({
-        //     type:GlobalStoreActionType.UPDATE_CHECKED_INGREDIENTS,
-        //     payload:currentList
-        // })
     }
 
     //update state for when an ingredient is unchecked
@@ -151,10 +114,6 @@ export const useGlobalStore = () => {
                 currentList.splice(i,1)
             }
         }
-        // storeReducer({
-        //     type:GlobalStoreActionType.UPDATE_CHECKED_INGREDIENT,
-        //     payload:currentList
-        // })
     }
 
     //filter through database for possible recipes and updates the state
@@ -182,17 +141,12 @@ export const useGlobalStore = () => {
                     payload:tempListForCard
                 })
                 store.history.push("/")
-                // console.log("CHECKING FORMAT::")
-                // console.log(tempListForCard)
-                // console.log(store.recipes)
 
                 let size=store.filteredRecipes.length
                 console.log("FILTERED RECIPE SIZE:"+size)
-                if(size){
-                    // randomlySelectRecipe(size)
-                }
-                else{
+                if(size===0){
                     alert("no recipes can be found")
+                    // randomlySelectRecipe(size)
                 }
             }
         }asyncGetRecipes()
@@ -200,8 +154,6 @@ export const useGlobalStore = () => {
 
     //randomly selects a recipe from filtered list 
     store.randomlySelectRecipe=function(size){
-        // console.log("# of possible recipe(s):"+size)
-        // console.log(store.filteredRecipes)
         let chosenRecipe=store.filteredRecipes[getRandomInt(size)]
         store.markRecipeForModal(chosenRecipe)
     }
@@ -237,19 +189,10 @@ export const useGlobalStore = () => {
     store.hideRecipeModal=function(){
         let modal=document.getElementById("recipe-modal");
         modal.classList.remove("is-visible");
-        // let emptyList=[]
-        // storeReducer({
-        //     type:GlobalStoreActionType.GENERATE_RECIPES,
-        //     payload:emptyList
-        // })
-        // store.filteredRecipes=[]
         console.log("FILTERED RECIPE AFTER CLOSING MODAL")
         console.log(store.filteredRecipes)
         store.showModal=false
     }
-
-
-
 
 
 

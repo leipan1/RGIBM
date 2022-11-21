@@ -21,8 +21,6 @@ const ListSelector = () => {
     let recipeCard="";
     if(store){
         if(store.recipes){
-            console.log("EWUHUWEHCRUIWH")
-            console.log(store.recipes)
             recipeCard=store.recipes.map((pair)=>(
             <RecipeCards
                 idNamePair={pair}
@@ -47,9 +45,12 @@ const ListSelector = () => {
     }
 
     const handleChooseRecipe=(event)=>{
-        console.log("OOGGG")
-        console.log(store.filteredRecipes.length)
-        store.randomlySelectRecipe(store.filteredRecipes.length)
+        if(store.filteredRecipes.length>0){
+            store.randomlySelectRecipe(store.filteredRecipes.length)
+        }
+        else{
+            alert("No recipes to choose from")
+        }
     }
     
     return (

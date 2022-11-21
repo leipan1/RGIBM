@@ -19,9 +19,6 @@ app.use(express.json())
 const recipeRouter = require('./routes/recipes-router')
 app.use('/api', recipeRouter)
 
-// SETUP OUR OWN ROUTERS AS MIDDLEWARE
-const ingredientRouter = require('./routes/ingredient-router')
-app.use('/api', ingredientRouter)
 
 // INITIALIZE OUR DATABASE OBJECT
 const db = require('./db')
