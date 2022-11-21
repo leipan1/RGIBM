@@ -45,6 +45,12 @@ const ListSelector = () => {
             store.uncheckIngredients(event.target.value)
         }
     }
+
+    const handleChooseRecipe=(event)=>{
+        console.log("OOGGG")
+        console.log(store.filteredRecipes.length)
+        store.randomlySelectRecipe(store.filteredRecipes.length)
+    }
     
     return (
         <div id="selector">
@@ -73,6 +79,7 @@ const ListSelector = () => {
                 }
             </div>
             <input id="submit-button" type="submit" value="Generate" onClick={handleSubmit}/>
+            <input id="random-button" type="submit" value="Randomnize" onClick={handleChooseRecipe}/>
             <RecipeModal/>
         </div>
         )

@@ -159,6 +159,7 @@ export const useGlobalStore = () => {
 
     //filter through database for possible recipes and updates the state
     store.filterRecipes=function(){
+        store.filteredRecipes=[]
         async function asyncGetRecipes(){
             let response=await api.getAllRecipes()
             let tempList=store.filteredRecipes
@@ -174,7 +175,8 @@ export const useGlobalStore = () => {
                         tempListForCard.push(response.data.data[i])
                     }
                 }
-
+                
+                //updates state for recipe card
                 storeReducer({
                     type:GlobalStoreActionType.LOAD_RECIPES,
                     payload:tempListForCard
@@ -185,6 +187,7 @@ export const useGlobalStore = () => {
                 // console.log(store.recipes)
 
                 let size=store.filteredRecipes.length
+                console.log("FILTERED RECIPE SIZE:"+size)
                 if(size){
                     // randomlySelectRecipe(size)
                 }
@@ -196,7 +199,7 @@ export const useGlobalStore = () => {
     }
 
     //randomly selects a recipe from filtered list 
-    function randomlySelectRecipe(size){
+    store.randomlySelectRecipe=function(size){
         // console.log("# of possible recipe(s):"+size)
         // console.log(store.filteredRecipes)
         let chosenRecipe=store.filteredRecipes[getRandomInt(size)]
@@ -239,7 +242,9 @@ export const useGlobalStore = () => {
         //     type:GlobalStoreActionType.GENERATE_RECIPES,
         //     payload:emptyList
         // })
-        store.filteredRecipes=[]
+        // store.filteredRecipes=[]
+        console.log("FILTERED RECIPE AFTER CLOSING MODAL")
+        console.log(store.filteredRecipes)
         store.showModal=false
     }
 
