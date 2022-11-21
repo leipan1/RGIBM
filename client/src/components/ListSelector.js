@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom'
 import { GlobalStoreContext } from '../store'
 import Ingredients from './Ingredients.json'
 import RecipeModal from './RecipeModal'
+import RecipeCards from './RecipeCards'
+
 
 
 
@@ -10,6 +12,24 @@ const ListSelector = () => {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
 
+    useEffect(() => {
+        store.loadRecipes();
+        console.log("LOADING RECIPES NOW!")
+    }, []);
+
+    //add props
+    let recipeCard="";
+    if(store){
+        if(store.recipes){
+            console.log("EWUHUWEHCRUIWH")
+            console.log(store.recipes)
+            recipeCard=store.recipes.map((pair)=>(
+            <RecipeCards
+                idNamePair={pair}
+            />
+            ))
+        }
+    }
 
     const handleSubmit=(event)=>{
         store.filterRecipes()
@@ -29,7 +49,9 @@ const ListSelector = () => {
     return (
         <div id="selector">
             <div id="recipe-list">
-                PUT RECIPES HERE
+                {
+                    recipeCard
+                }
             </div>
             <div id="recipe-selector">
                 <div id="recipe-selector-heading">

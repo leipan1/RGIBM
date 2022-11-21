@@ -17,6 +17,7 @@ export const GlobalStoreActionType = {
     UPDATE_CHECKED_INGREDIENTS: "UPDATE_CHECKED_INGREDIENT",
     GENERATE_RECIPES:"GENERATE_RECIPES",
     INGREDIENTS_LIST:"INGREDIENTS_LIST",
+    LOAD_RECIPES:"LOAD_RECIPES",
 }
 
 
@@ -31,6 +32,7 @@ export const useGlobalStore = () => {
         showModal: false,
         filteredRecipes:[],
         chosenRecipe:null,
+        recipes:[]
         // ingredientsList:[]
     });
 
@@ -46,6 +48,7 @@ export const useGlobalStore = () => {
                     showModal: store.showModal,
                     filteredRecipes:store.acceptableRecipe,
                     chosenRecipe:payload,
+                    recipes:store.recipes
                     // ingredientsList:store.ingredientsList
                 })
             }
@@ -55,6 +58,7 @@ export const useGlobalStore = () => {
                     showModal: store.showModal,
                     filteredRecipes:store.acceptableRecipe,
                     chosenRecipe:store.chosenRecipe,
+                    recipes:store.recipes
                     // ingredientsList:store.ingredientsList
                 })
             }
@@ -64,9 +68,23 @@ export const useGlobalStore = () => {
                     showModal:store.showModal,
                     filteredRecipes:payload,
                     chosenRecipe:store.chosenRecipe,
+                    recipes:store.recipes
                     // ingredientsList:store.ingredientsList
                 })
             }
+            case GlobalStoreActionType.LOAD_RECIPES:{
+                return setStore({
+                    checkedIngredients:store.checkedIngredients,
+                    showModal:store.showModal,
+                    filteredRecipes:store.filteredRecipes,
+                    chosenRecipe:store.chosenRecipe,
+                    recipes:payload
+                    // ingredientsList:store.ingredientsList
+                })
+            }
+            
+            
+            
             // case GlobalStoreActionType.INGREDIENTS_LIST:{
             //     return setStore({
             //         checkedIngredients:store.checkedIngredients,
@@ -79,6 +97,23 @@ export const useGlobalStore = () => {
             default:
                 return store;
         }
+    }
+
+    store.loadRecipes=function(){
+        async function asyncLoadRecipes(){
+            const response=await api.getAllRecipes();
+            if(response.data.success){
+                let recipe= response.data.data
+                storeReducer({
+                    type:GlobalStoreActionType.LOAD_RECIPES,
+                    payload:recipe
+                })
+            }
+            else{
+                console.log("API FAILED TO GET RECIPES")
+            }
+
+        }asyncLoadRecipes()
     }
 
     // store.loadIngredientsName=function(){
@@ -127,29 +162,31 @@ export const useGlobalStore = () => {
         async function asyncGetRecipes(){
             let response=await api.getAllRecipes()
             let tempList=store.filteredRecipes
+            let tempListForCard=[]
+            
             if(response.data.success){
                 for(let i=0;i<response.data.data.length;i++){
                     let recipe=response.data.data[i].ingredients
                     let ingre=store.checkedIngredients
-                
                     const match=recipe.every(val=>ingre.includes(val))
                     if(match){
                         tempList.push(response.data.data[i]._id)
+                        tempListForCard.push(response.data.data[i])
                     }
                 }
-                // console.log("FILTERED RECIPE BEFORE:")
-                // console.log(store.filteredRecipes)
-                // storeReducer({
-                //     type:GlobalStoreActionType.GENERATE_RECIPES,
-                //     payload:tempList
-                // })
-                // console.log("FILTERED RECIPE:")
-                // console.log(store.filteredRecipes)
 
-                //checks if there are matching recipes, if not, alerts the user
+                storeReducer({
+                    type:GlobalStoreActionType.LOAD_RECIPES,
+                    payload:tempListForCard
+                })
+                store.history.push("/")
+                // console.log("CHECKING FORMAT::")
+                // console.log(tempListForCard)
+                // console.log(store.recipes)
+
                 let size=store.filteredRecipes.length
                 if(size){
-                    randomlySelectRecipe(size)
+                    // randomlySelectRecipe(size)
                 }
                 else{
                     alert("no recipes can be found")
